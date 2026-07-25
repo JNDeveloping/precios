@@ -13,8 +13,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: #f5f5f5; }
 button, input, select { font: inherit; }
-.poster-page { break-after: page; page-break-after: always; }
-.poster-page:last-child { break-after: auto; page-break-after: auto; }
+.poster-page + .poster-page { break-before: page; page-break-before: always; }
 
 /* El área imprimible queda sin sombras/márgenes cuando se envía a impresora. */
 @media print {

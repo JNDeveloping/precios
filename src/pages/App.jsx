@@ -29,8 +29,10 @@ export default function App() {
     setSavedPosters((current) => current.filter((item) => item.id !== id));
   };
 
-  const handleExport = useCallback(() => {
-    if (batchRef.current) exportPosterPdf(batchRef.current, poster.size, postersToExport);
+  const handleExport = useCallback(async () => {
+    if (!batchRef.current) return;
+    await exportPosterPdf(batchRef.current, poster.size, postersToExport);
+    setSavedPosters([]);
   }, [poster.size, postersToExport]);
 
   const handlePrint = useCallback(() => window.print(), []);

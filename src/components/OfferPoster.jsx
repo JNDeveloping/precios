@@ -26,11 +26,12 @@ export function PrintablePoster({ poster, printRef }) {
         {poster.offerLabel || 'OFERTA'}
       </div>
 
-      <div className="absolute left-1/2 top-[24%] h-40 w-40 -translate-x-1/2 rounded-full bg-yellow-300 blur-2xl opacity-70" />
-
       <div className="relative flex h-full flex-col items-center justify-center px-[7%] pb-[12%] pt-[18%] text-center">
-        <div className={`mb-8 flex max-w-[92%] items-center break-words bg-gradient-to-br ${stamp.className} ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`}>
-          {poster.tagline}
+        <div className="relative mb-8 max-w-[92%]">
+          <div className={`absolute -inset-3 bg-yellow-300 opacity-70 blur-md ${shapeClasses[poster.stampShape]}`} />
+          <div className={`relative flex items-center break-words bg-gradient-to-br ${stamp.className} ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`}>
+            {poster.tagline}
+          </div>
         </div>
 
         <div className="max-w-full leading-none tracking-tighter text-red-600">
