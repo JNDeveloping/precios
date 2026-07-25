@@ -17,8 +17,11 @@ button, input, select { font: inherit; }
 
 /* El área imprimible queda sin sombras/márgenes cuando se envía a impresora. */
 @media print {
+  html, body { margin: 0; overflow: hidden; }
+  .export-batch, .no-print, .preview-title { display: none !important; }
+  .preview-card { display: contents !important; }
   body * { visibility: hidden; }
   #poster-print, #poster-print * { visibility: visible; }
-  #poster-print { position: fixed; inset: 0; width: var(--poster-width); height: var(--poster-height); margin: 0; box-shadow: none !important; transform: none !important; }
+  #poster-print { position: fixed; inset: 0; width: var(--poster-width); height: var(--poster-height); margin: 0; box-shadow: none !important; transform: none !important; break-after: auto !important; page-break-after: auto !important; }
   @page { margin: 0; }
 }

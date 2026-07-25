@@ -7,7 +7,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
   const inputClass = 'mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-100';
 
   return (
-    <section className="rounded-[2rem] bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] lg:p-8">
+    <section className="no-print rounded-[2rem] bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] lg:p-8">
       <div className="mb-8 flex items-start gap-3">
         <div className="rounded-2xl bg-red-600 p-3 text-white shadow-lg shadow-red-200"><Sparkles size={24} /></div>
         <div>

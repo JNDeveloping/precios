@@ -62,11 +62,11 @@ export default function App() {
         <OfferPoster poster={poster} printRef={printRef} />
       </div>
 
-      <footer className="mx-auto mt-8 max-w-7xl rounded-3xl bg-white px-6 py-4 text-center text-sm font-extrabold tracking-wide text-gray-600 shadow-sm">
+      <footer className="no-print mx-auto mt-8 max-w-7xl rounded-3xl bg-white px-6 py-4 text-center text-sm font-extrabold tracking-wide text-gray-600 shadow-sm">
         Web Desarrollada por Tomas Victola
       </footer>
 
-      <div className="pointer-events-none fixed -left-[9999px] top-0" aria-hidden="true">
+      <div className="export-batch pointer-events-none fixed -left-[9999px] top-0" aria-hidden="true">
         <div ref={batchRef}>
           {expandedPosters.map((item, index) => <PrintablePoster key={`${item.id ?? 'actual'}-${index}`} poster={item} />)}
         </div>

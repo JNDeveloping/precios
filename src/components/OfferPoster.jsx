@@ -51,8 +51,8 @@ export function OfferPoster({ poster, printRef }) {
   const size = SIZES[poster.size];
 
   return (
-    <div className="w-full rounded-[2rem] bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:p-6">
-      <div className="mb-4 flex items-center justify-between text-sm font-bold text-gray-500">
+    <div className="preview-card w-full rounded-[2rem] bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:p-6">
+      <div className="preview-title mb-4 flex items-center justify-between text-sm font-bold text-gray-500">
         <span>Vista previa en tiempo real</span>
         <span>{size.label} · {size.widthMm}×{size.heightMm} mm</span>
       </div>
