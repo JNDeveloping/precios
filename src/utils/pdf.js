@@ -9,8 +9,7 @@ function expandCopies(posters) {
   return posters.flatMap((poster) => Array.from({ length: Math.max(1, Number(poster.copies) || 1) }, () => poster));
 }
 
-function forcePageSizes(element, size) {
-  const pages = [...element.querySelectorAll('.poster-page')];
+function forcePageSizes(pages, size) {
   return pages.map((page) => {
     const previous = { width: page.style.width, height: page.style.height, maxWidth: page.style.maxWidth };
     page.style.width = `${size.widthMm}mm`;
@@ -24,33 +23,44 @@ function forcePageSizes(element, size) {
   });
 }
 
-// Exporta uno o varios carteles con dimensiones ISO y una página completa por copia.
+function getBaseOptions(size) {
+  return {
+    margin: 0,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 4, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+    jsPDF: { unit: 'mm', format: [size.widthMm, size.heightMm], orientation: 'portrait', compress: true },
+  };
+}
+
+async function renderPageToCanvas(page, size) {
+  return html2pdf().set(getBaseOptions(size)).from(page).toCanvas().get('canvas');
+}
+
+// Exporta uno o varios carteles renderizando cada hoja por separado para evitar páginas blancas.
 export async function exportPosterPdf(element, sizeKey, posters) {
   const size = SIZES[sizeKey];
   const posterList = expandCopies(posters);
-  const safeName = getSafeName(posterList[0]?.productName || 'ofertas');
-  const previousWidth = element.style.width;
-  const previousMaxWidth = element.style.maxWidth;
-  const restorePages = forcePageSizes(element, size);
+  const pages = [...element.querySelectorAll('.poster-page')];
+  if (!pages.length) return;
 
-  element.style.width = `${size.widthMm}mm`;
-  element.style.maxWidth = 'none';
+  const safeName = getSafeName(posterList[0]?.productName || 'ofertas');
+  const restorePages = forcePageSizes(pages, size);
 
   try {
-    await html2pdf()
-      .set({
-        filename: `cartel-${safeName}-${posterList.length}-copias-${sizeKey}.pdf`,
-        margin: 0,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 4, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: [size.widthMm, size.heightMm], orientation: 'portrait', compress: true },
-        pagebreak: { mode: ['css'] },
-      })
-      .from(element)
-      .save();
+    const firstWorker = html2pdf()
+      .set({ ...getBaseOptions(size), filename: `cartel-${safeName}-${posterList.length}-copias-${sizeKey}.pdf` })
+      .from(pages[0])
+      .toPdf();
+    const pdf = await firstWorker.get('pdf');
+
+    for (const page of pages.slice(1)) {
+      const canvas = await renderPageToCanvas(page, size);
+      pdf.addPage([size.widthMm, size.heightMm], 'portrait');
+      pdf.addImage(canvas.toDataURL('image/jpeg', 1), 'JPEG', 0, 0, size.widthMm, size.heightMm);
+    }
+
+    pdf.save(`cartel-${safeName}-${posterList.length}-copias-${sizeKey}.pdf`);
   } finally {
-    element.style.width = previousWidth;
-    element.style.maxWidth = previousMaxWidth;
     restorePages.forEach((restore) => restore());
   }
 }
