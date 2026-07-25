@@ -1,5 +1,5 @@
 import { BORDER_COLORS, STAMP_COLORS, SIZES } from '../utils/posterOptions.js';
-import { getPriceFontSize, getProductFontSize } from '../utils/textSizing.js';
+import { getCurrencyFontSize, getOfferFontSize, getPriceFontSize, getProductFontSize } from '../utils/textSizing.js';
 
 const shapeClasses = {
   circle: 'rounded-full aspect-square min-h-32 justify-center',
@@ -22,27 +22,26 @@ export function PrintablePoster({ poster, printRef }) {
     >
       <div className="absolute inset-5 rounded-[1.6rem] border-2 border-red-100" />
 
-      <div className="absolute left-0 top-[8%] z-10 bg-red-600 px-10 py-3 text-4xl font-black uppercase tracking-[0.16em] text-white shadow-[0_12px_0_#991b1b] sm:text-5xl">
+      <div className="absolute left-0 top-[8%] z-10 max-w-[92%] break-words bg-red-600 px-10 py-3 font-black uppercase leading-none tracking-[0.16em] text-white shadow-[0_12px_0_#991b1b]" style={{ fontSize: getOfferFontSize(poster.offerLabel) }}>
         {poster.offerLabel || 'OFERTA'}
       </div>
 
       <div className="absolute left-1/2 top-[24%] h-40 w-40 -translate-x-1/2 rounded-full bg-yellow-300 blur-2xl opacity-70" />
 
       <div className="relative flex h-full flex-col items-center justify-center px-[7%] pb-[12%] pt-[18%] text-center">
-        <div className={`mb-8 flex items-center bg-gradient-to-br ${stamp.className} ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`}>
+        <div className={`mb-8 flex max-w-[92%] items-center break-words bg-gradient-to-br ${stamp.className} ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`}>
           {poster.tagline}
         </div>
 
         <div className="max-w-full leading-none tracking-tighter text-red-600">
-          <span className="align-top text-[clamp(2rem,7vw,4.8rem)] font-black">$</span>
+          <span className="align-top font-black" style={{ fontSize: getCurrencyFontSize(poster.price) }}>$</span>
           <span className="break-all font-black" style={{ fontSize: getPriceFontSize(poster.price) }}>{poster.price || '0'}</span>
         </div>
 
-        <h2 className="mt-8 max-w-[92%] overflow-hidden text-balance break-words font-black uppercase leading-[0.95] tracking-tight text-gray-950" style={{ fontSize: getProductFontSize(poster.productName) }}>
+        <h2 className="mt-8 max-w-[92%] text-balance break-words font-black uppercase leading-[0.95] tracking-tight text-gray-950" style={{ fontSize: getProductFontSize(poster.productName) }}>
           {poster.productName || 'Nombre del producto'}
         </h2>
       </div>
-
     </article>
   );
 }

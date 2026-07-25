@@ -3,6 +3,7 @@ import { ControlPanel } from '../components/ControlPanel.jsx';
 import { OfferPoster, PrintablePoster } from '../components/OfferPoster.jsx';
 import { useLocalStorage } from '../hooks/useLocalStorage.js';
 import { exportPosterPdf, expandCopies } from '../utils/pdf.js';
+import { createId } from '../utils/id.js';
 import { DEFAULT_POSTER } from '../utils/posterOptions.js';
 
 export default function App() {
@@ -21,7 +22,7 @@ export default function App() {
   const expandedPosters = useMemo(() => expandCopies(postersToExport), [postersToExport]);
 
   const handleSave = () => {
-    setSavedPosters((current) => [...current, { ...poster, id: crypto.randomUUID() }]);
+    setSavedPosters((current) => [...current, { ...poster, id: createId() }]);
   };
 
   const handleRemoveSaved = (id) => {
