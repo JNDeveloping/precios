@@ -15,7 +15,7 @@ export function OfferPoster({ poster, printRef }) {
       <article
         id="poster-print"
         ref={printRef}
-        className={`relative mx-auto w-full max-w-[560px] overflow-hidden bg-white ${size.previewClass}`}
+        className={`relative mx-auto w-full max-w-[794px] overflow-hidden bg-white ${size.previewClass}`}
         style={{ border: '5px solid #dc2626', '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}
       >
         <div className="absolute inset-5 rounded-[1.6rem] border-2 border-red-100" />
@@ -26,7 +26,7 @@ export function OfferPoster({ poster, printRef }) {
 
         <div className="absolute left-1/2 top-[24%] h-40 w-40 -translate-x-1/2 rounded-full bg-yellow-300 blur-2xl opacity-70" />
 
-        <div className="relative flex h-full flex-col items-center justify-center px-[7%] pt-[18%] text-center">
+        <div className="relative flex h-full flex-col items-center justify-center px-[7%] pb-[12%] pt-[18%] text-center">
           <div className={`mb-8 rounded-full bg-gradient-to-br ${stamp.className} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`}>
             {poster.tagline}
           </div>
@@ -40,6 +40,10 @@ export function OfferPoster({ poster, printRef }) {
             {poster.productName || 'Nombre del producto'}
           </h2>
         </div>
+
+        <footer className="absolute bottom-[3.5%] left-1/2 w-full -translate-x-1/2 px-8 text-center text-[clamp(0.85rem,2vw,1.4rem)] font-extrabold tracking-wide text-gray-700">
+          Web Desarrollada por Tomas Victola
+        </footer>
       </article>
     </div>
   );
