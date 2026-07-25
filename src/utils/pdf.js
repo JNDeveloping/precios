@@ -1,4 +1,5 @@
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { SIZES } from './posterOptions.js';
 
 function getSafeName(name) {
@@ -23,43 +24,37 @@ function forcePageSizes(pages, size) {
   });
 }
 
-function getBaseOptions(size) {
-  return {
-    margin: 0,
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 4, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: [size.widthMm, size.heightMm], orientation: 'portrait', compress: true },
-  };
+async function renderPage(page) {
+  return html2canvas(page, {
+    scale: 4,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: page.scrollWidth,
+    windowHeight: page.scrollHeight,
+  });
 }
 
-async function renderPageToCanvas(page, size) {
-  return html2pdf().set(getBaseOptions(size)).from(page).toCanvas().get('canvas');
-}
-
-// Exporta uno o varios carteles renderizando cada hoja por separado para evitar páginas blancas.
+// Exporta cada cartel como imagen exacta dentro de jsPDF para impedir páginas blancas extras.
 export async function exportPosterPdf(element, sizeKey, posters) {
   const size = SIZES[sizeKey];
   const posterList = expandCopies(posters);
   const pages = [...element.querySelectorAll('.poster-page')];
   if (!pages.length) return;
 
-  const safeName = getSafeName(posterList[0]?.productName || 'ofertas');
+  const fileName = `cartel-${getSafeName(posterList[0]?.productName || 'ofertas')}-${posterList.length}-copias-${sizeKey}.pdf`;
+  const pdf = new jsPDF({ unit: 'mm', format: [size.widthMm, size.heightMm], orientation: 'portrait', compress: true });
   const restorePages = forcePageSizes(pages, size);
 
   try {
-    const firstWorker = html2pdf()
-      .set({ ...getBaseOptions(size), filename: `cartel-${safeName}-${posterList.length}-copias-${sizeKey}.pdf` })
-      .from(pages[0])
-      .toPdf();
-    const pdf = await firstWorker.get('pdf');
-
-    for (const page of pages.slice(1)) {
-      const canvas = await renderPageToCanvas(page, size);
-      pdf.addPage([size.widthMm, size.heightMm], 'portrait');
-      pdf.addImage(canvas.toDataURL('image/jpeg', 1), 'JPEG', 0, 0, size.widthMm, size.heightMm);
+    for (const [index, page] of pages.entries()) {
+      const canvas = await renderPage(page);
+      if (index > 0) pdf.addPage([size.widthMm, size.heightMm], 'portrait');
+      pdf.addImage(canvas.toDataURL('image/jpeg', 1), 'JPEG', 0, 0, size.widthMm, size.heightMm, undefined, 'FAST');
     }
 
-    pdf.save(`cartel-${safeName}-${posterList.length}-copias-${sizeKey}.pdf`);
+    pdf.save(fileName);
   } finally {
     restorePages.forEach((restore) => restore());
   }
