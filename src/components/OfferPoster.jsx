@@ -43,9 +43,6 @@ export function PrintablePoster({ poster, printRef }) {
         </h2>
       </div>
 
-      <footer className="absolute bottom-[3.5%] left-1/2 w-full -translate-x-1/2 px-8 text-center text-[clamp(0.85rem,2vw,1.4rem)] font-extrabold tracking-wide text-gray-700">
-        {poster.footerText || 'Web Desarrollada por Tomas Victola'}
-      </footer>
     </article>
   );
 }

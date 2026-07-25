@@ -37,7 +37,6 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Color del sello</span><select className={inputClass} value={poster.stampColor} onChange={update('stampColor')}>{Object.entries(STAMP_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Forma del sello</span><select className={inputClass} value={poster.stampShape} onChange={update('stampShape')}>{Object.entries(STAMP_SHAPES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Color del borde</span><select className={inputClass} value={poster.borderColor} onChange={update('borderColor')}>{Object.entries(BORDER_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
-        <label className="block"><span className="text-sm font-bold text-gray-700">Texto inferior</span><input className={inputClass} value={poster.footerText} onChange={update('footerText')} placeholder="Web Desarrollada por Tomas Victola" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Copias del producto actual</span><input className={inputClass} min="1" type="number" value={poster.copies} onChange={update('copies')} /></label>
       </div>
 

@@ -35,6 +35,5 @@ export const DEFAULT_POSTER = {
   stampColor: 'red',
   stampShape: 'circle',
   borderColor: 'red',
-  footerText: 'Web Desarrollada por Tomas Victola',
   copies: 1,
 };
