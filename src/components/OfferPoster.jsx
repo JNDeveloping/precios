@@ -2,8 +2,8 @@ import { SIZES } from '../utils/posterOptions.js';
 import { TemplateRenderer } from './TemplateRenderer.jsx';
 import { getTemplateMeta } from '../templates/templateRegistry.js';
 
-export function PrintablePoster({ poster, printRef }) {
-  return <TemplateRenderer templateId={poster.templateId} poster={poster} printRef={printRef} />;
+export function PrintablePoster({ poster, printRef, animated = false }) {
+  return <TemplateRenderer templateId={poster.templateId} poster={poster} printRef={printRef} animated={animated} />;
 }
 
 export function OfferPoster({ poster, printRef }) {
@@ -16,7 +16,7 @@ export function OfferPoster({ poster, printRef }) {
         <span>Vista previa en tiempo real · {template.name}</span>
         <span>{size.label} · {size.widthMm}×{size.heightMm} mm</span>
       </div>
-      <PrintablePoster poster={poster} printRef={printRef} />
+      <PrintablePoster poster={poster} printRef={printRef} animated />
     </div>
   );
 }

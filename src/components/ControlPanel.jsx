@@ -22,7 +22,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
-        <label className="block"><span className="text-sm font-bold text-gray-700">Logo / marca</span><input className={inputClass} value={poster.logo || ''} onChange={update('logo')} placeholder="Ej: Tomas Market" /></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Logo / marca</span><input className={inputClass} value={poster.logo || ''} onChange={update('logo')} placeholder="Ej: El Rincon De Los Nietos" /></label>
 
         <div>
           <span className="text-sm font-bold text-gray-700">Tamaño</span>

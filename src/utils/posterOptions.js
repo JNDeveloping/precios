@@ -32,7 +32,7 @@ export const DEFAULT_POSTER = {
   size: 'A4',
   offerLabel: 'OFERTA',
   tagline: TAGLINES[0],
-  logo: 'Tomas Market',
+  logo: 'El Rincon De Los Nietos',
   templateId: 'clasica',
   stampColor: 'red',
   stampShape: 'circle',
