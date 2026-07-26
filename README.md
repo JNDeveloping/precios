@@ -32,7 +32,7 @@ Luego abrí la URL que informa Vite en la terminal.
 
 ## Diseños disponibles
 
-La app incluye un sistema de plantillas preparado para crecer sin cambiar la lógica principal. Las plantillas iniciales son: Oferta Clásica, Oferta Premium, Liquidación, Precio Bajo, Nuevo, Combo, Black Friday y Mayorista.
+La app incluye un sistema de plantillas preparado para crecer sin cambiar la lógica principal. Las plantillas iniciales son: Oferta Clásica, Oferta Premium, Liquidación, Precio Bajo, Nuevo y Combo.
 
 
-Para combos, escribí varios productos en el campo de producto separados con `+`, coma, `&` o `y` (por ejemplo: `Pan + Fiambre + Queso`).
+Para combos, usá el botón **Agregar** dentro de **Productos del combo** para cargar todos los productos que quieras.

@@ -4,8 +4,6 @@ import { Liquidacion } from './Liquidacion.jsx';
 import { PrecioBajo } from './PrecioBajo.jsx';
 import { NuevoIngreso } from './NuevoIngreso.jsx';
 import { Combo } from './Combo.jsx';
-import { BlackFriday } from './BlackFriday.jsx';
-import { Mayorista } from './Mayorista.jsx';
 
 export const TEMPLATE_CATEGORIES = [
   { id: 'todos', label: 'Todos' },
@@ -13,7 +11,6 @@ export const TEMPLATE_CATEGORIES = [
   { id: 'nuevos', label: '🆕 Nuevos' },
   { id: 'ofertas', label: '🔥 Ofertas' },
   { id: 'eventos', label: '🎉 Eventos' },
-  { id: 'mayorista', label: '💰 Mayorista' },
 ];
 
 export const TEMPLATE_META = [
@@ -23,8 +20,6 @@ export const TEMPLATE_META = [
   { id: 'precio-bajo', name: 'Precio Bajo', categories: ['ofertas'], component: PrecioBajo },
   { id: 'nuevo', name: 'Nuevo', categories: ['nuevos'], component: NuevoIngreso },
   { id: 'combo', name: 'Combo', categories: ['ofertas', 'eventos'], component: Combo },
-  { id: 'black-friday', name: 'Black Friday', categories: ['eventos', 'ofertas'], component: BlackFriday },
-  { id: 'mayorista', name: 'Mayorista', categories: ['mayorista', 'favoritos'], component: Mayorista },
 ];
 
 export const templates = TEMPLATE_META.reduce((acc, template) => ({ ...acc, [template.id]: template.component }), {});

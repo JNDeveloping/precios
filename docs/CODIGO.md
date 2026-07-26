@@ -41,8 +41,6 @@ Vite levanta la app React y muestra la URL local en la terminal.
     │   ├── PrecioBajo.jsx
     │   ├── NuevoIngreso.jsx
     │   ├── Combo.jsx
-    │   ├── BlackFriday.jsx
-    │   ├── Mayorista.jsx
     │   └── templateRegistry.js
     ├── utils
     │   ├── id.js
@@ -120,7 +118,7 @@ Recibe el ID de plantilla y usa un mapa de componentes para renderizar el diseñ
 
 ### `src/templates/`
 
-Contiene las plantillas independientes iniciales: Oferta Clásica, Oferta Premium, Liquidación, Precio Bajo, Nuevo, Combo, Black Friday y Mayorista. `templateRegistry.js` centraliza metadata, categorías y el mapa de componentes para que sumar diseños nuevos sea simple.
+Contiene las plantillas independientes iniciales: Oferta Clásica, Oferta Premium, Liquidación, Precio Bajo, Nuevo y Combo. `templateRegistry.js` centraliza metadata, categorías y el mapa de componentes para que sumar diseños nuevos sea simple.
 
 ### `src/utils/posterOptions.js`
 

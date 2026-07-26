@@ -12,6 +12,12 @@ function getPositionVars(positions = {}) {
   }, {});
 }
 
+function getTemplateProduct(poster) {
+  if (poster.templateId !== 'combo') return poster.productName;
+  const products = (poster.comboProducts ?? []).map((product) => product.trim()).filter(Boolean);
+  return products.length ? products.join(' + ') : poster.productName;
+}
+
 export function TemplateRenderer({ templateId = DEFAULT_TEMPLATE_ID, poster, printRef, animated = false, editable = false, onPositionChange }) {
   const Template = templates[templateId] ?? templates[DEFAULT_TEMPLATE_ID];
   const tamaño = SIZES[poster.size] ?? SIZES.A4;
@@ -51,7 +57,7 @@ export function TemplateRenderer({ templateId = DEFAULT_TEMPLATE_ID, poster, pri
       onMouseUp={stopDrag}
       onMouseLeave={stopDrag}
     >
-      <Template producto={poster.productName} precio={poster.price} mensaje={poster.tagline} logo={poster.logo} tamaño={tamaño} />
+      <Template producto={getTemplateProduct(poster)} precio={poster.price} mensaje={poster.tagline} logo={poster.logo} tamaño={tamaño} />
     </div>
   );
 }
