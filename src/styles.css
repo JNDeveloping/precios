@@ -11,9 +11,21 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: #f5f5f5; }
+body { margin: 0; min-width: 320px; min-height: 100vh; overflow-x: hidden; background: #f5f5f5; }
 button, input, select { font: inherit; }
+.poster-page { container-type: inline-size; font-size: clamp(6px, 2cqw, 16px); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.poster-page * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 .poster-page + .poster-page { break-before: page; page-break-before: always; }
+
+.template-renderer { transform-origin: top left; }
+.template-renderer--animated { animation: templateFadeScale 220ms ease-out; }
+.thumbnail-scale { width: 794px; transform: scale(0.18); transform-origin: top left; pointer-events: none; }
+.thumbnail-scale .poster-page { margin: 0; max-width: 794px; }
+
+@keyframes templateFadeScale {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
 
 /* Impresión: se elimina la UI y queda únicamente la hoja, sin ocultar hijos del cartel. */
 @media print {
@@ -22,6 +34,29 @@ button, input, select { font: inherit; }
   .export-batch, .no-print, .preview-title { display: none !important; }
   main { min-height: auto !important; padding: 0 !important; background: #ffffff !important; }
   main > div { display: block !important; max-width: none !important; margin: 0 !important; }
+  .template-renderer, .template-renderer--animated { animation: none !important; transform: none !important; }
   .preview-card { width: auto !important; padding: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
   #poster-print { width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; box-shadow: none !important; break-after: auto !important; page-break-after: auto !important; }
+  #poster-print .poster-page { display: block !important; width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+}
+
+.template-renderer [data-editable-key="logo"] { translate: var(--slot-logo-x) var(--slot-logo-y); }
+.template-renderer [data-editable-key="message"] { translate: var(--slot-message-x) var(--slot-message-y); }
+.template-renderer [data-editable-key="items"] { translate: var(--slot-items-x) var(--slot-items-y); }
+.template-renderer [data-editable-key="price"] { translate: var(--slot-price-x) var(--slot-price-y); }
+.template-renderer [data-editable-key="product"] { translate: var(--slot-product-x) var(--slot-product-y); }
+.template-renderer--editable [data-editable-key] { cursor: grab; touch-action: none; user-select: none; transition: translate 120ms ease; }
+.template-renderer--editable [data-editable-key]:active { cursor: grabbing; }
+
+
+@media (max-width: 419px) {
+  .thumbnail-scale { transform: scale(0.145); }
+}
+
+@media (min-width: 420px) and (max-width: 639px) {
+  .thumbnail-scale { transform: scale(0.155); }
+}
+
+@media (min-width: 640px) {
+  .thumbnail-scale { transform: scale(0.18); }
 }

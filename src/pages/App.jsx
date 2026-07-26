@@ -37,7 +37,17 @@ export default function App() {
 
   const handlePrint = useCallback(() => window.print(), []);
 
-  const handleClear = () => updatePoster({ ...DEFAULT_POSTER, size: poster.size, productName: '', price: '', copies: 1 });
+  const handlePositionChange = useCallback((key, position) => {
+    setPoster((current) => ({
+      ...current,
+      positions: {
+        ...(current.positions ?? {}),
+        [key]: position,
+      },
+    }));
+  }, []);
+
+  const handleClear = () => updatePoster({ ...DEFAULT_POSTER, size: poster.size, templateId: poster.templateId, productName: '', price: '', copies: 1 });
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -56,10 +66,10 @@ export default function App() {
   }, [handleExport, handlePrint]);
 
   return (
-    <main className="min-h-screen bg-[#f5f5f5] px-4 py-6 text-gray-900 sm:px-6 lg:px-10">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[460px_1fr] lg:items-start">
+    <main className="min-h-screen overflow-x-hidden bg-[#f5f5f5] px-3 py-4 text-gray-900 sm:px-6 sm:py-6 lg:px-10">
+      <div className="mx-auto grid w-full max-w-7xl gap-4 sm:gap-6 lg:grid-cols-[minmax(360px,460px)_minmax(0,1fr)] lg:items-start">
         <ControlPanel poster={poster} savedPosters={savedPosters} onChange={updatePoster} onClear={handleClear} onExport={handleExport} onPrint={handlePrint} onSave={handleSave} onRemoveSaved={handleRemoveSaved} />
-        <OfferPoster poster={poster} printRef={printRef} />
+        <OfferPoster poster={poster} printRef={printRef} onPositionChange={handlePositionChange} />
       </div>
 
       <footer className="no-print mx-auto mt-8 max-w-7xl rounded-3xl bg-white px-6 py-4 text-center text-sm font-extrabold tracking-wide text-gray-600 shadow-sm">

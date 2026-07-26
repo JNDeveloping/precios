@@ -28,12 +28,16 @@ export const STAMP_SHAPES = {
 
 export const DEFAULT_POSTER = {
   productName: 'Yerba mate tradicional',
+  comboProducts: ['Pan', 'Fiambre'],
   price: '1.999',
   size: 'A4',
   offerLabel: 'OFERTA',
   tagline: TAGLINES[0],
+  logo: 'El Rincon De Los Nietos',
+  templateId: 'clasica',
   stampColor: 'red',
   stampShape: 'circle',
   borderColor: 'red',
   copies: 1,
+  positions: {},
 };
