@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Bot, Camera, FileImage, FolderOpen, Search, ScanBarcode, Zap } from 'lucide-react';
 import { recognizeProductFromImage } from '../../services/intelligentLoadService.js';
-import { searchProductsWithAiWeb } from '../../vision/productWebSearch.js';
+import { searchProductsFreeWeb } from '../../vision/productWebSearch.js';
 
 export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
   const fileRef = useRef(null);
@@ -19,11 +19,11 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
     const cleanQuery = nameQuery.trim();
     if (!cleanQuery) return;
     setBusy(true);
-    setStatus('🌐 Buscando producto en la web con IA...');
+    setStatus('🌐 Buscando producto gratis en Open Food Facts...');
     try {
-      const results = await searchProductsWithAiWeb(cleanQuery);
+      const results = await searchProductsFreeWeb(cleanQuery);
       setNameResults(results.slice(0, 6));
-      setStatus(results.length ? '✅ Producto encontrado en la web con IA.' : 'No encontré coincidencias web. Probá con una foto del envase.');
+      setStatus(results.length ? '✅ Producto encontrado en una base gratuita.' : 'No encontré coincidencias gratis. Probá con una foto del envase.');
     } catch (error) {
       setStatus(`⚠️ ${error.message}`);
     } finally {
@@ -57,13 +57,13 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.28em] text-indigo-200">Carga Inteligente IA</p>
           <h2 className="mt-1 text-xl font-black sm:text-2xl">🤖 Carga Inteligente</h2>
-          <p className="mt-2 text-sm leading-6 text-white/70">Sacá una foto, subí imágenes, buscá en la web con IA o escaneá EAN13. La base local queda como cache para reutilizar resultados.</p>
+          <p className="mt-2 text-sm leading-6 text-white/70">Sacá una foto, subí imágenes, buscá gratis en Open Food Facts o escaneá EAN13. La base local queda como cache para reutilizar resultados.</p>
         </div>
       </div>
 
 
       <form onSubmit={handleNameSearch} className="mt-5 rounded-3xl bg-white/10 p-3 ring-1 ring-white/10">
-        <label className="text-xs font-black uppercase tracking-[0.2em] text-indigo-100">Buscar por nombre con IA / web</label>
+        <label className="text-xs font-black uppercase tracking-[0.2em] text-indigo-100">Buscar por nombre gratis</label>
         <div className="mt-2 flex flex-col gap-2 min-[420px]:flex-row">
           <input value={nameQuery} onChange={(event) => setNameQuery(event.target.value)} placeholder="Ej: Coca Cola 2.25" className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white px-4 py-3 text-sm font-bold text-slate-950 outline-none" />
           <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-black text-white transition hover:bg-indigo-600"><Search size={18} /> Buscar</button>

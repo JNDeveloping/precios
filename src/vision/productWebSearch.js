@@ -1,68 +1,57 @@
 import { saveProduct } from '../database/productDb.js';
 import { normalizeProduct } from '../utils/productNormalization.js';
 
-const PRODUCT_SEARCH_PROMPT = `Buscá en la web información comercial del producto indicado para supermercado en Argentina o LATAM cuando sea posible.
-Devolvé SOLO JSON válido con esta forma exacta:
-{
-  "products": [
-    {
-      "name": "Nombre comercial limpio con contenido si se conoce",
-      "brand": "Marca",
-      "variant": "Variante",
-      "flavor": "Sabor",
-      "content": "Contenido, ej: 2.25 L",
-      "unit": "Litros | Mililitros | Kilos | Gramos | Unidades |",
-      "category": "Categoría de góndola",
-      "barcode": "EAN si aparece, solo números",
-      "image": "URL pública de imagen si aparece",
-      "sourceUrl": "URL consultada más útil"
-    }
-  ]
-}
-No devuelvas slogans ni promociones. Eliminá palabras como NUEVO, PROMO, GRATIS, +20%, edición limitada y pack ahorro.`;
+const OPEN_FOOD_FACTS_SEARCH_URL = 'https://world.openfoodfacts.org/cgi/search.pl';
 
-function extractOutputText(data) {
-  return data.output_text || data.output?.flatMap((item) => item.content || []).find((part) => part.text || part.type === 'output_text')?.text || '{}';
+function getFirstCategory(categories = '') {
+  return String(categories)
+    .split(',')
+    .map((category) => category.replace(/^\w+:/, '').trim())
+    .filter(Boolean)
+    .at(-1) || 'Sin categoría';
 }
 
-function parseProductSearchJson(text) {
-  const cleanText = String(text || '{}').trim().replace(/^```(?:json)?/i, '').replace(/```$/i, '').trim();
-  const firstBrace = cleanText.indexOf('{');
-  const lastBrace = cleanText.lastIndexOf('}');
-  const jsonText = firstBrace >= 0 && lastBrace > firstBrace ? cleanText.slice(firstBrace, lastBrace + 1) : cleanText;
-  return JSON.parse(jsonText);
+function normalizeOpenFoodFactsProduct(product) {
+  const name = product.product_name || product.generic_name || '';
+  return normalizeProduct({
+    name,
+    brand: String(product.brands || '').split(',')[0]?.trim() || '',
+    variant: '',
+    flavor: '',
+    content: product.quantity || '',
+    unit: '',
+    category: getFirstCategory(product.categories),
+    barcode: product.code || '',
+    image: product.image_front_url || product.image_url || '',
+    sourceUrl: product.url || '',
+  });
 }
 
-export async function searchProductsWithAiWeb(query, { apiKey = import.meta.env.VITE_OPENAI_API_KEY } = {}) {
+export async function searchProductsFreeWeb(query) {
   const cleanQuery = query.trim();
   if (!cleanQuery) return [];
-  if (!apiKey) throw new Error('Falta configurar VITE_OPENAI_API_KEY para buscar productos con IA en la web.');
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: import.meta.env.VITE_OPENAI_SEARCH_MODEL || import.meta.env.VITE_OPENAI_VISION_MODEL || 'gpt-4.1-mini',
-      tools: [{ type: 'web_search' }],
-      tool_choice: 'required',
-      input: `${PRODUCT_SEARCH_PROMPT}\n\nProducto a buscar: ${cleanQuery}`,
-      max_output_tokens: 1200,
-    }),
+  const params = new URLSearchParams({
+    search_terms: cleanQuery,
+    search_simple: '1',
+    action: 'process',
+    json: '1',
+    page_size: '8',
+    fields: 'code,product_name,generic_name,brands,quantity,categories,image_front_url,image_url,url',
   });
 
-  if (!response.ok) {
-    let detail = '';
-    try {
-      const errorData = await response.json();
-      detail = errorData.error?.message ? `: ${errorData.error.message}` : '';
-    } catch {
-      detail = '';
-    }
-    throw new Error(`La búsqueda web con IA no respondió correctamente (${response.status})${detail}.`);
-  }
-  const parsed = parseProductSearchJson(extractOutputText(await response.json()));
-  const products = Array.isArray(parsed.products) ? parsed.products : [];
-  const normalizedProducts = products.map((product) => normalizeProduct(product));
+  const response = await fetch(`${OPEN_FOOD_FACTS_SEARCH_URL}?${params.toString()}`, {
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) throw new Error(`La búsqueda gratuita no respondió correctamente (${response.status}).`);
+  const data = await response.json();
+  const products = Array.isArray(data.products) ? data.products : [];
+  const normalizedProducts = products
+    .map(normalizeOpenFoodFactsProduct)
+    .filter((product) => product.name && product.name !== 'Producto sin nombre');
 
   const savedProducts = [];
   for (const product of normalizedProducts) {
@@ -70,3 +59,5 @@ export async function searchProductsWithAiWeb(query, { apiKey = import.meta.env.
   }
   return savedProducts;
 }
+
+export { searchProductsFreeWeb as searchProductsWithAiWeb };
