@@ -24,12 +24,13 @@ export function TemplateRenderer({ templateId = DEFAULT_TEMPLATE_ID, poster, pri
   const dragRef = useRef(null);
 
   const startDrag = (event) => {
-    if (!editable || event.button !== 0) return;
+    if (!editable || (event.pointerType === 'mouse' && event.button !== 0)) return;
     const target = event.target.closest('[data-editable-key]');
     if (!target) return;
     const key = target.dataset.editableKey;
     const current = poster.positions?.[key] ?? { x: 0, y: 0 };
     dragRef.current = { key, startX: event.clientX, startY: event.clientY, originX: current.x, originY: current.y };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   };
 
@@ -42,7 +43,8 @@ export function TemplateRenderer({ templateId = DEFAULT_TEMPLATE_ID, poster, pri
     });
   };
 
-  const stopDrag = () => {
+  const stopDrag = (event) => {
+    event?.currentTarget?.releasePointerCapture?.(event.pointerId);
     dragRef.current = null;
   };
 
@@ -52,10 +54,10 @@ export function TemplateRenderer({ templateId = DEFAULT_TEMPLATE_ID, poster, pri
       id={printRef ? 'poster-print' : undefined}
       className={`${animated ? 'template-renderer template-renderer--animated' : 'template-renderer'} ${editable ? 'template-renderer--editable' : ''}`}
       style={{ '--poster-width': `${tamaño.widthMm}mm`, '--poster-height': `${tamaño.heightMm}mm`, ...getPositionVars(poster.positions) }}
-      onMouseDown={startDrag}
-      onMouseMove={moveDrag}
-      onMouseUp={stopDrag}
-      onMouseLeave={stopDrag}
+      onPointerDown={startDrag}
+      onPointerMove={moveDrag}
+      onPointerUp={stopDrag}
+      onPointerCancel={stopDrag}
     >
       <Template producto={getTemplateProduct(poster)} precio={poster.price} mensaje={poster.tagline} logo={poster.logo} tamaño={tamaño} />
     </div>

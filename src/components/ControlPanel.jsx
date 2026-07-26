@@ -15,12 +15,12 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
   const removeComboProduct = (index) => onChange({ ...poster, comboProducts: comboProducts.filter((_, itemIndex) => itemIndex !== index) });
 
   return (
-    <section className="no-print rounded-[2rem] bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] lg:p-8">
+    <section className="no-print rounded-[1.5rem] bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.08)] sm:rounded-[2rem] sm:p-6 lg:p-8">
       <div className="mb-8 flex items-start gap-3">
         <div className="rounded-2xl bg-red-600 p-3 text-white shadow-lg shadow-red-200"><Sparkles size={24} /></div>
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.28em] text-red-600">Carteles promo</p>
-          <h1 className="mt-1 text-3xl font-black tracking-tight text-gray-950">Generador de ofertas</h1>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-gray-950 sm:text-3xl">Generador de ofertas</h1>
           <p className="mt-2 text-sm leading-6 text-gray-500">Editá textos, elegí un diseño de almacén y mové elementos en la previsualización con el mouse.</p>
         </div>
       </div>
@@ -67,7 +67,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
 
       <TemplateSelector selectedTemplate={poster.templateId} onSelect={(templateId) => onChange({ ...poster, templateId })} />
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+      <div className="mt-8 grid gap-3 min-[420px]:grid-cols-2">
         <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3 font-black text-white shadow-lg shadow-red-200 transition hover:bg-red-700" onClick={onExport}><Download size={18} /> PDF</button>
         <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 font-black text-white shadow-lg shadow-emerald-100 transition hover:bg-emerald-700" onClick={onSave}><Save size={18} /> Guardar</button>
         <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gray-950 px-4 py-3 font-black text-white transition hover:bg-gray-800" onClick={onPrint}><Printer size={18} /> Imprimir</button>
