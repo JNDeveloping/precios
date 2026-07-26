@@ -22,7 +22,15 @@ Devolvé SOLO JSON válido con esta forma exacta:
 No devuelvas slogans ni promociones. Eliminá palabras como NUEVO, PROMO, GRATIS, +20%, edición limitada y pack ahorro.`;
 
 function extractOutputText(data) {
-  return data.output_text || data.output?.flatMap((item) => item.content || []).find((part) => part.text)?.text || '{}';
+  return data.output_text || data.output?.flatMap((item) => item.content || []).find((part) => part.text || part.type === 'output_text')?.text || '{}';
+}
+
+function parseProductSearchJson(text) {
+  const cleanText = String(text || '{}').trim().replace(/^```(?:json)?/i, '').replace(/```$/i, '').trim();
+  const firstBrace = cleanText.indexOf('{');
+  const lastBrace = cleanText.lastIndexOf('}');
+  const jsonText = firstBrace >= 0 && lastBrace > firstBrace ? cleanText.slice(firstBrace, lastBrace + 1) : cleanText;
+  return JSON.parse(jsonText);
 }
 
 export async function searchProductsWithAiWeb(query, { apiKey = import.meta.env.VITE_OPENAI_API_KEY } = {}) {
@@ -35,14 +43,24 @@ export async function searchProductsWithAiWeb(query, { apiKey = import.meta.env.
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: import.meta.env.VITE_OPENAI_SEARCH_MODEL || import.meta.env.VITE_OPENAI_VISION_MODEL || 'gpt-4.1-mini',
-      tools: [{ type: 'web_search', search_context_size: 'low' }],
+      tools: [{ type: 'web_search' }],
+      tool_choice: 'required',
       input: `${PRODUCT_SEARCH_PROMPT}\n\nProducto a buscar: ${cleanQuery}`,
-      text: { format: { type: 'json_object' } },
+      max_output_tokens: 1200,
     }),
   });
 
-  if (!response.ok) throw new Error(`La búsqueda web con IA no respondió correctamente (${response.status}).`);
-  const parsed = JSON.parse(extractOutputText(await response.json()));
+  if (!response.ok) {
+    let detail = '';
+    try {
+      const errorData = await response.json();
+      detail = errorData.error?.message ? `: ${errorData.error.message}` : '';
+    } catch {
+      detail = '';
+    }
+    throw new Error(`La búsqueda web con IA no respondió correctamente (${response.status})${detail}.`);
+  }
+  const parsed = parseProductSearchJson(extractOutputText(await response.json()));
   const products = Array.isArray(parsed.products) ? parsed.products : [];
   const normalizedProducts = products.map((product) => normalizeProduct(product));
 
