@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Bot, Camera, FileImage, FolderOpen, Search, ScanBarcode, Zap } from 'lucide-react';
 import { recognizeProductFromImage } from '../../services/intelligentLoadService.js';
-import { searchProducts } from '../../database/productDb.js';
+import { searchProductsWithAiWeb } from '../../vision/productWebSearch.js';
 
 export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
   const fileRef = useRef(null);
@@ -19,11 +19,11 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
     const cleanQuery = nameQuery.trim();
     if (!cleanQuery) return;
     setBusy(true);
-    setStatus('🔎 Buscando por nombre en la base local...');
+    setStatus('🌐 Buscando producto en la web con IA...');
     try {
-      const results = await searchProducts(cleanQuery);
+      const results = await searchProductsWithAiWeb(cleanQuery);
       setNameResults(results.slice(0, 6));
-      setStatus(results.length ? '✅ Producto encontrado por nombre.' : 'No encontré coincidencias locales. Probá con una foto para cargarlo con IA.');
+      setStatus(results.length ? '✅ Producto encontrado en la web con IA.' : 'No encontré coincidencias web. Probá con una foto del envase.');
     } catch (error) {
       setStatus(`⚠️ ${error.message}`);
     } finally {
@@ -57,13 +57,13 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.28em] text-indigo-200">Carga Inteligente IA</p>
           <h2 className="mt-1 text-xl font-black sm:text-2xl">🤖 Carga Inteligente</h2>
-          <p className="mt-2 text-sm leading-6 text-white/70">Sacá una foto, subí imágenes o escaneá EAN13. Si el producto ya existe en IndexedDB, no se vuelve a llamar a la IA.</p>
+          <p className="mt-2 text-sm leading-6 text-white/70">Sacá una foto, subí imágenes, buscá en la web con IA o escaneá EAN13. La base local queda como cache para reutilizar resultados.</p>
         </div>
       </div>
 
 
       <form onSubmit={handleNameSearch} className="mt-5 rounded-3xl bg-white/10 p-3 ring-1 ring-white/10">
-        <label className="text-xs font-black uppercase tracking-[0.2em] text-indigo-100">Buscar por nombre</label>
+        <label className="text-xs font-black uppercase tracking-[0.2em] text-indigo-100">Buscar por nombre con IA / web</label>
         <div className="mt-2 flex flex-col gap-2 min-[420px]:flex-row">
           <input value={nameQuery} onChange={(event) => setNameQuery(event.target.value)} placeholder="Ej: Coca Cola 2.25" className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white px-4 py-3 text-sm font-bold text-slate-950 outline-none" />
           <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-black text-white transition hover:bg-indigo-600"><Search size={18} /> Buscar</button>
@@ -72,7 +72,7 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
           <div className="mt-3 grid gap-2">
             {nameResults.map((product) => (
               <button key={product.id} type="button" onClick={() => onProductDetected(product)} className="rounded-2xl bg-white px-4 py-3 text-left text-sm font-black text-slate-950">
-                {product.name} <span className="font-bold text-slate-500">· {product.brand || 'Sin marca'} · {product.lastPrice ? `$${product.lastPrice}` : 'sin precio'}</span>
+                {product.name} <span className="font-bold text-slate-500">· {product.brand || 'Sin marca'} · {product.category || 'sin categoría'}</span>
               </button>
             ))}
           </div>
