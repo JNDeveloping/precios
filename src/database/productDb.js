@@ -1,4 +1,5 @@
 import { buildSearchText, normalizeBarcode, normalizeProduct, similarity } from '../utils/productNormalization.js';
+import { createId } from '../utils/id.js';
 
 const DB_NAME = 'precios-intelligent-products';
 const DB_VERSION = 1;
@@ -35,7 +36,7 @@ function promisify(request) {
 export async function saveProduct(product) {
   const store = await tx('readwrite');
   const normalized = normalizeProduct(product);
-  const record = { ...normalized, id: normalized.id || normalized.barcode || crypto.randomUUID(), searchText: buildSearchText(normalized) };
+  const record = { ...normalized, id: normalized.id || normalized.barcode || createId(), searchText: buildSearchText(normalized) };
   await promisify(store.put(record));
   return record;
 }

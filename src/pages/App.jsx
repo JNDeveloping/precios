@@ -96,7 +96,7 @@ export default function App() {
   }, [handleExport, handlePrint]);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f5f5f5] px-3 py-4 text-gray-900 sm:px-6 sm:py-6 lg:px-10">
+    <main className="min-h-screen overflow-x-hidden bg-[#f5f5f5] px-2 py-3 text-gray-900 min-[390px]:px-3 sm:px-6 sm:py-6 lg:px-10">
       <div className="mx-auto grid w-full max-w-7xl gap-4 sm:gap-6 lg:grid-cols-[minmax(360px,460px)_minmax(0,1fr)] lg:items-start">
         <div>
           <ControlPanel poster={poster} savedPosters={savedPosters} onChange={updatePoster} onClear={handleClear} onExport={handleExport} onPrint={handlePrint} onSave={handleSave} onRemoveSaved={handleRemoveSaved} />
@@ -105,8 +105,10 @@ export default function App() {
         <OfferPoster poster={poster} printRef={printRef} onPositionChange={handlePositionChange} />
       </div>
 
-      <FavoritesPanel products={favorites} onUseProduct={applyProductToPoster} />
-      <ProductsPage onUseProduct={applyProductToPoster} />
+      <div className="mx-auto w-full max-w-7xl">
+        <FavoritesPanel products={favorites} onUseProduct={applyProductToPoster} />
+        <ProductsPage onUseProduct={applyProductToPoster} />
+      </div>
 
       <BarcodeScannerModal open={scannerOpen} onClose={() => setScannerOpen(false)} onFound={applyProductToPoster} onNeedPhoto={setPendingBarcode} />
 

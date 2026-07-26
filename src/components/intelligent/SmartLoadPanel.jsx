@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { Bot, Camera, FileImage, FolderOpen, ScanBarcode, Zap } from 'lucide-react';
+import { Bot, Camera, FileImage, FolderOpen, Search, ScanBarcode, Zap } from 'lucide-react';
 import { recognizeProductFromImage } from '../../services/intelligentLoadService.js';
+import { searchProducts } from '../../database/productDb.js';
 
 export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
   const fileRef = useRef(null);
@@ -9,6 +10,26 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
   const [status, setStatus] = useState('Listo para reconocer productos.');
   const [busy, setBusy] = useState(false);
   const [suggestion, setSuggestion] = useState(null);
+  const [nameQuery, setNameQuery] = useState('');
+  const [nameResults, setNameResults] = useState([]);
+
+
+  const handleNameSearch = async (event) => {
+    event.preventDefault();
+    const cleanQuery = nameQuery.trim();
+    if (!cleanQuery) return;
+    setBusy(true);
+    setStatus('🔎 Buscando por nombre en la base local...');
+    try {
+      const results = await searchProducts(cleanQuery);
+      setNameResults(results.slice(0, 6));
+      setStatus(results.length ? '✅ Producto encontrado por nombre.' : 'No encontré coincidencias locales. Probá con una foto para cargarlo con IA.');
+    } catch (error) {
+      setStatus(`⚠️ ${error.message}`);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const handleFiles = async (files, batch = false) => {
     const list = [...files].filter((file) => file.type.startsWith('image/'));
@@ -30,15 +51,33 @@ export function SmartLoadPanel({ onProductDetected, onOpenScanner }) {
   };
 
   return (
-    <section className="no-print mt-8 overflow-hidden rounded-[2rem] border border-indigo-100 bg-gradient-to-br from-indigo-950 via-slate-950 to-red-950 p-5 text-white shadow-2xl">
+    <section className="no-print mt-8 overflow-hidden rounded-[1.5rem] border border-indigo-100 bg-gradient-to-br from-indigo-950 via-slate-950 to-red-950 p-4 sm:rounded-[2rem] sm:p-5 text-white shadow-2xl">
       <div className="flex items-start gap-3">
         <div className="rounded-2xl bg-white/10 p-3"><Bot size={26} /></div>
         <div>
           <p className="text-xs font-black uppercase tracking-[0.28em] text-indigo-200">Carga Inteligente IA</p>
-          <h2 className="mt-1 text-2xl font-black">🤖 Carga Inteligente</h2>
+          <h2 className="mt-1 text-xl font-black sm:text-2xl">🤖 Carga Inteligente</h2>
           <p className="mt-2 text-sm leading-6 text-white/70">Sacá una foto, subí imágenes o escaneá EAN13. Si el producto ya existe en IndexedDB, no se vuelve a llamar a la IA.</p>
         </div>
       </div>
+
+
+      <form onSubmit={handleNameSearch} className="mt-5 rounded-3xl bg-white/10 p-3 ring-1 ring-white/10">
+        <label className="text-xs font-black uppercase tracking-[0.2em] text-indigo-100">Buscar por nombre</label>
+        <div className="mt-2 flex flex-col gap-2 min-[420px]:flex-row">
+          <input value={nameQuery} onChange={(event) => setNameQuery(event.target.value)} placeholder="Ej: Coca Cola 2.25" className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white px-4 py-3 text-sm font-bold text-slate-950 outline-none" />
+          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-black text-white transition hover:bg-indigo-600"><Search size={18} /> Buscar</button>
+        </div>
+        {nameResults.length > 0 && (
+          <div className="mt-3 grid gap-2">
+            {nameResults.map((product) => (
+              <button key={product.id} type="button" onClick={() => onProductDetected(product)} className="rounded-2xl bg-white px-4 py-3 text-left text-sm font-black text-slate-950">
+                {product.name} <span className="font-bold text-slate-500">· {product.brand || 'Sin marca'} · {product.lastPrice ? `$${product.lastPrice}` : 'sin precio'}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </form>
 
       <div className="mt-5 grid gap-3 min-[420px]:grid-cols-2">
         <button type="button" onClick={() => cameraRef.current?.click()} className="rounded-2xl bg-white px-4 py-3 font-black text-slate-950 transition hover:scale-[1.02]"><Camera className="mr-2 inline" size={18} /> Sacar foto</button>
