@@ -39,3 +39,11 @@ button, input, select { font: inherit; }
   #poster-print { width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; box-shadow: none !important; break-after: auto !important; page-break-after: auto !important; }
   #poster-print .poster-page { display: block !important; width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 }
+
+.template-renderer [data-editable-key="logo"] { translate: var(--slot-logo-x) var(--slot-logo-y); }
+.template-renderer [data-editable-key="message"] { translate: var(--slot-message-x) var(--slot-message-y); }
+.template-renderer [data-editable-key="items"] { translate: var(--slot-items-x) var(--slot-items-y); }
+.template-renderer [data-editable-key="price"] { translate: var(--slot-price-x) var(--slot-price-y); }
+.template-renderer [data-editable-key="product"] { translate: var(--slot-product-x) var(--slot-product-y); }
+.template-renderer--editable [data-editable-key] { cursor: grab; transition: translate 120ms ease; }
+.template-renderer--editable [data-editable-key]:active { cursor: grabbing; }

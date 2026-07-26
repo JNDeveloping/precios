@@ -6,7 +6,7 @@ const thumbnailPoster = {
   productName: 'Yerba mate',
   price: '1.999',
   tagline: 'Oferta especial',
-  logo: 'Market',
+  logo: 'El Rincón',
   size: 'A4',
 };
 

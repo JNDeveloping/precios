@@ -5,6 +5,8 @@ import { BORDER_COLORS, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES } from '../u
 // Panel de carga optimizado para operar rápido desde teclado o mouse.
 export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport, onPrint, onSave, onRemoveSaved }) {
   const update = (field) => (event) => onChange({ ...poster, [field]: event.target.value });
+  const productLabel = poster.templateId === 'combo' ? 'Productos del combo' : 'Nombre del producto';
+  const productPlaceholder = poster.templateId === 'combo' ? 'Ej: Pan + Fiambre + Queso + Gaseosa' : 'Ej: Café molido 500 g';
   const inputClass = 'mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-100';
 
   return (
@@ -14,13 +16,13 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.28em] text-red-600">Carteles promo</p>
           <h1 className="mt-1 text-3xl font-black tracking-tight text-gray-950">Generador de ofertas</h1>
-          <p className="mt-2 text-sm leading-6 text-gray-500">Editá todos los textos del cartel, guardá productos y exportá copias en lote.</p>
+          <p className="mt-2 text-sm leading-6 text-gray-500">Editá textos, elegí un diseño de almacén y mové elementos en la previsualización con el mouse.</p>
         </div>
       </div>
 
       <div className="space-y-5">
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
-        <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">{productLabel}</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder={productPlaceholder} /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Logo / marca</span><input className={inputClass} value={poster.logo || ''} onChange={update('logo')} placeholder="Ej: El Rincon De Los Nietos" /></label>
 

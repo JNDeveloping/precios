@@ -38,4 +38,5 @@ export const DEFAULT_POSTER = {
   stampShape: 'circle',
   borderColor: 'red',
   copies: 1,
+  positions: {},
 };
