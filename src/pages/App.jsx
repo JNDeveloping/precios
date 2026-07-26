@@ -37,7 +37,7 @@ export default function App() {
 
   const handlePrint = useCallback(() => window.print(), []);
 
-  const handleClear = () => updatePoster({ ...DEFAULT_POSTER, size: poster.size, productName: '', price: '', copies: 1 });
+  const handleClear = () => updatePoster({ ...DEFAULT_POSTER, size: poster.size, templateId: poster.templateId, productName: '', price: '', copies: 1 });
 
   useEffect(() => {
     const onKeyDown = (event) => {

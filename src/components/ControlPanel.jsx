@@ -1,4 +1,5 @@
 import { Download, Plus, Printer, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react';
+import { TemplateSelector } from './TemplateSelector.jsx';
 import { BORDER_COLORS, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES } from '../utils/posterOptions.js';
 
 // Panel de carga optimizado para operar rápido desde teclado o mouse.
@@ -21,6 +22,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Logo / marca</span><input className={inputClass} value={poster.logo || ''} onChange={update('logo')} placeholder="Ej: Tomas Market" /></label>
 
         <div>
           <span className="text-sm font-bold text-gray-700">Tamaño</span>
@@ -39,6 +41,8 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Color del borde</span><select className={inputClass} value={poster.borderColor} onChange={update('borderColor')}>{Object.entries(BORDER_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Copias del producto actual</span><input className={inputClass} min="1" type="number" value={poster.copies} onChange={update('copies')} /></label>
       </div>
+
+      <TemplateSelector selectedTemplate={poster.templateId} onSelect={(templateId) => onChange({ ...poster, templateId })} />
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3 font-black text-white shadow-lg shadow-red-200 transition hover:bg-red-700" onClick={onExport}><Download size={18} /> PDF</button>

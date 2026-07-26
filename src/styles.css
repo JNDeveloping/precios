@@ -15,6 +15,15 @@ body { margin: 0; min-width: 320px; min-height: 100vh; background: #f5f5f5; }
 button, input, select { font: inherit; }
 .poster-page + .poster-page { break-before: page; page-break-before: always; }
 
+.template-renderer { animation: templateFadeScale 220ms ease-out; }
+.thumbnail-scale { width: 794px; transform: scale(0.18); transform-origin: top left; pointer-events: none; }
+.thumbnail-scale .poster-page { margin: 0; max-width: 794px; }
+
+@keyframes templateFadeScale {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 /* Impresión: se elimina la UI y queda únicamente la hoja, sin ocultar hijos del cartel. */
 @media print {
   html, body { margin: 0 !important; background: #ffffff !important; overflow: hidden; }
@@ -24,4 +33,5 @@ button, input, select { font: inherit; }
   main > div { display: block !important; max-width: none !important; margin: 0 !important; }
   .preview-card { width: auto !important; padding: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
   #poster-print { width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; box-shadow: none !important; break-after: auto !important; page-break-after: auto !important; }
+  #poster-print .poster-page { width: var(--poster-width) !important; height: var(--poster-height) !important; max-width: none !important; margin: 0 !important; }
 }
