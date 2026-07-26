@@ -45,6 +45,17 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
           </div>
         )}
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
+        {(poster.brand || poster.category || poster.content || poster.barcode) && (
+          <div className="rounded-3xl border border-indigo-100 bg-indigo-50 p-4 text-sm font-bold text-indigo-950">
+            <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-indigo-600">Autocompletado IA</p>
+            <div className="grid gap-2">
+              {poster.brand && <span>Marca: {poster.brand}</span>}
+              {poster.category && <span>Categoría: {poster.category}</span>}
+              {(poster.content || poster.unit) && <span>Contenido: {[poster.content, poster.unit].filter(Boolean).join(' · ')}</span>}
+              {poster.barcode && <span>Código: {poster.barcode}</span>}
+            </div>
+          </div>
+        )}
         <label className="block"><span className="text-sm font-bold text-gray-700">Logo / marca</span><input className={inputClass} value={poster.logo || ''} onChange={update('logo')} placeholder="Ej: El Rincon De Los Nietos" /></label>
 
         <div>

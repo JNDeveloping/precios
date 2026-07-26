@@ -15,7 +15,10 @@
     "lucide-react": "latest",
     "html2pdf.js": "latest",
     "html2canvas": "latest",
-    "jspdf": "latest"
+    "jspdf": "latest",
+    "framer-motion": "latest",
+    "@zxing/browser": "latest",
+    "tesseract.js": "latest"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
