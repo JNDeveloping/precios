@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, ImagePlus, Move, Plus, Printer, RotateCcw, Save, Sparkles, Star, Trash2, X } from 'lucide-react';
+import { CirclePlus, Download, ImagePlus, Move, Plus, Printer, RotateCcw, Save, Sparkles, Star, Trash2, X } from 'lucide-react';
 import { BORDER_COLORS, DEFAULT_POSITIONS, DEFAULT_POSTER, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES, TEMPLATES } from '../utils/posterOptions.js';
 import { removeFlatBackground } from '../utils/image.js';
 
@@ -19,8 +19,14 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
   };
   const updateTemplate = (key) => {
     const template = TEMPLATES[key];
-    onChange({ ...poster, template: key, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
+    const needsProducts = key === 'twoForOne' || key === 'combo';
+    const additionalProducts = needsProducts && !poster.additionalProducts?.length ? [''] : (poster.additionalProducts || []);
+    onChange({ ...poster, template: key, additionalProducts, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
+    if (needsProducts) window.requestAnimationFrame(() => document.getElementById('additional-products')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   };
+  const updateAdditionalProduct = (index, value) => onChange({ ...poster, additionalProducts: poster.additionalProducts.map((item, itemIndex) => itemIndex === index ? value : item) });
+  const addComboProduct = () => onChange({ ...poster, additionalProducts: [...(poster.additionalProducts || []), ''] });
+  const removeAdditionalProduct = (index) => onChange({ ...poster, additionalProducts: poster.additionalProducts.filter((_, itemIndex) => itemIndex !== index) });
   const updateImage = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -69,6 +75,12 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del negocio</span><input className={inputClass} value={poster.businessName || ''} onChange={update('businessName')} placeholder="El Rincon De Los Nietos" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
+        {(poster.template === 'twoForOne' || poster.template === 'combo') && <div id="additional-products" className="rounded-3xl border-2 border-amber-200 bg-amber-50 p-4">
+          <div className="mb-3"><span className="font-black text-amber-950">{poster.template === 'twoForOne' ? 'Segundo producto del 2×1' : 'Productos del combo'}</span><p className="mt-1 text-xs text-amber-700">Estos productos aparecerán juntos en el cartel.</p></div>
+          <div className="space-y-2">{(poster.additionalProducts || []).map((item, index) => <div key={index} className="flex gap-2"><input className="min-w-0 flex-1 rounded-xl border border-amber-200 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-amber-300" value={item} onChange={(event) => updateAdditionalProduct(index, event.target.value)} placeholder={poster.template === 'twoForOne' ? 'Ej: Gaseosa 2,25 L' : `Producto ${index + 2}`} /><button type="button" onClick={() => removeAdditionalProduct(index)} className="rounded-xl p-2 text-red-600 hover:bg-red-100" aria-label="Quitar producto"><X size={17} /></button></div>)}</div>
+          {poster.template === 'combo' && <button type="button" onClick={addComboProduct} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-3 py-2 text-sm font-black text-amber-950 hover:bg-amber-300"><CirclePlus size={17} /> Agregar otro producto</button>}
+          {poster.template === 'twoForOne' && !(poster.additionalProducts || []).length && <button type="button" onClick={addComboProduct} className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-3 py-2 text-sm font-black text-amber-950"><CirclePlus size={17} /> Agregar segundo producto</button>}
+        </div>}
         <div className="rounded-3xl border border-gray-200 p-4"><span className="text-sm font-bold text-gray-700">Imagen del producto <span className="font-normal text-gray-400">(opcional)</span></span><label className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-4 font-bold text-gray-600 transition hover:border-red-300 hover:bg-red-50"><ImagePlus size={19} /> {processingImage ? 'Procesando…' : poster.productImage ? 'Cambiar imagen' : 'Agregar imagen'}<input className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={updateImage} disabled={processingImage} /></label>
           <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl bg-gray-50 p-3 text-sm font-bold text-gray-700"><input type="checkbox" className="h-5 w-5 accent-red-600" checked={Boolean(poster.removeImageBackground)} onChange={toggleBackgroundRemoval} disabled={!poster.productImage || processingImage} /> Quitar fondo automáticamente</label>
           {poster.productImage && <><label className="mt-4 block"><span className="flex justify-between text-xs font-bold text-gray-600"><span>Tamaño de la imagen</span><span>{poster.imageScale || 100}%</span></span><input className="mt-2 w-full accent-red-600" type="range" min="30" max="180" step="5" value={poster.imageScale || 100} onChange={update('imageScale')} /></label><button type="button" onClick={() => onChange({ ...poster, productImage: '', originalProductImage: '', removeImageBackground: false })} className="mt-3 inline-flex items-center gap-1 text-xs font-black text-red-600"><X size={14} /> Quitar imagen</button></>}

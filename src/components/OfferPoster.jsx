@@ -8,6 +8,14 @@ const shapeClasses = {
   burst: 'rounded-[35%_65%_45%_55%/55%_40%_60%_45%] rotate-[-4deg]',
 };
 
+function TemplateDecorations({ template, colors }) {
+  if (template === 'clearance') return <><div className="absolute -right-[18%] top-[7%] h-[20%] w-[80%] -rotate-6 bg-gray-950" /><div className="absolute -bottom-[8%] -left-[15%] h-[22%] w-[90%] rotate-6 bg-red-200" /></>;
+  if (template === 'twoForOne') return <><div className="absolute -right-[20%] -top-[4%] h-[34%] w-[90%] -rotate-12 bg-yellow-300 opacity-70" /><div className="absolute bottom-0 left-0 h-[15%] w-full bg-orange-100" /></>;
+  if (template === 'combo') return <><div className="absolute -left-[25%] top-[20%] h-[22%] w-[85%] rotate-12 bg-emerald-100" /><div className="absolute -right-[20%] bottom-[5%] h-[25%] w-[85%] -rotate-12 bg-green-200" /></>;
+  if (template === 'wholesale') return <><div className="absolute inset-x-0 top-0 h-[18%] bg-blue-100" /><div className="absolute inset-x-0 bottom-0 h-[16%] bg-blue-200" /></>;
+  return <div className="absolute bottom-0 left-0 h-[10%] w-full opacity-30" style={{ backgroundColor: colors.innerBorderColor }} />;
+}
+
 // Guarda coordenadas porcentuales para que la composición sea idéntica en A4, A5 y PDF.
 function DraggableElement({ id, position, enabled, onMove, className = '', children }) {
   const itemRef = useRef(null);
@@ -47,6 +55,7 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
 
   return (
     <article id={printRef ? 'poster-print' : undefined} ref={printRef} className={`poster-page relative mx-auto w-full max-w-[794px] overflow-hidden ${size.previewClass}`} style={{ backgroundColor: colors.posterBackground, border: `5px solid ${border}`, '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}>
+      <TemplateDecorations template={poster.template} colors={colors} />
       <div className="absolute inset-5 rounded-[1.6rem] border-2" style={{ borderColor: colors.innerBorderColor }} />
 
       <DraggableElement id="business" position={positions.business} enabled={movable} onMove={onPositionChange} className="w-[82%] text-center">
@@ -73,7 +82,10 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
       </DraggableElement>
 
       <DraggableElement id="product" position={positions.product} enabled={movable} onMove={onPositionChange} className="w-[86%] text-center">
-        <h2 className="text-balance break-words font-black uppercase leading-[0.95] tracking-tight" style={{ color: colors.productTextColor, fontSize: getProductFontSize(poster.productName) }}>{poster.productName || 'Nombre del producto'}</h2>
+        <h2 className="text-balance break-words font-black uppercase leading-[0.95] tracking-tight" style={{ color: colors.productTextColor, fontSize: getProductFontSize([poster.productName, ...(poster.additionalProducts || [])].join(' + ')) }}>
+          <span>{poster.productName || 'Nombre del producto'}</span>
+          {(poster.additionalProducts || []).filter(Boolean).map((product, index) => <span key={`${product}-${index}`} className="mt-2 block"><span style={{ color: colors.priceColor }}>{poster.template === 'twoForOne' ? ' + ' : '• '}</span>{product}</span>)}
+        </h2>
       </DraggableElement>
     </article>
   );

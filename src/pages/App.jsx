@@ -63,7 +63,7 @@ export default function App() {
     <main className="min-h-screen bg-[#f5f5f5] px-4 py-6 text-gray-900 sm:px-6 lg:px-10">
       <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[460px_1fr] lg:items-start">
         <ControlPanel poster={poster} savedPosters={savedPosters} onChange={updatePoster} onClear={handleClear} onExport={handleExport} onPrint={handlePrint} onSave={handleSave} onRemoveSaved={handleRemoveSaved} />
-        <OfferPoster poster={poster} printRef={printRef} onPositionChange={handlePositionChange} />
+        <div className="lg:sticky lg:top-6"><OfferPoster poster={poster} printRef={printRef} onPositionChange={handlePositionChange} /></div>
       </div>
 
       <footer className="no-print mx-auto mt-8 max-w-7xl rounded-3xl bg-white px-6 py-4 text-center text-sm font-extrabold tracking-wide text-gray-600 shadow-sm">

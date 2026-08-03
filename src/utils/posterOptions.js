@@ -48,6 +48,7 @@ export const DEFAULT_POSTER = {
   removeImageBackground: false,
   imageScale: 100,
   productName: 'Yerba mate tradicional',
+  additionalProducts: [],
   price: '1.999',
   size: 'A4',
   offerLabel: 'OFERTA',
