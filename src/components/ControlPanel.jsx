@@ -1,10 +1,27 @@
 import { Download, Plus, Printer, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react';
-import { BORDER_COLORS, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES } from '../utils/posterOptions.js';
+import { BORDER_COLORS, DEFAULT_POSTER, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES } from '../utils/posterOptions.js';
 
 // Panel de carga optimizado para operar rápido desde teclado o mouse.
 export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport, onPrint, onSave, onRemoveSaved }) {
   const update = (field) => (event) => onChange({ ...poster, [field]: event.target.value });
+  const updateStampPreset = (event) => {
+    const key = event.target.value;
+    const color = STAMP_COLORS[key];
+    onChange({ ...poster, stampColor: key, stampStartColor: color.startHex, stampEndColor: color.endHex, stampTextColor: color.textHex });
+  };
+  const updateBorderPreset = (event) => {
+    const key = event.target.value;
+    onChange({ ...poster, borderColor: key, borderCustomColor: BORDER_COLORS[key].hex });
+  };
   const inputClass = 'mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-100';
+  const colorFields = [
+    ['posterBackground', 'Fondo de la hoja'], ['innerBorderColor', 'Borde interior'],
+    ['borderCustomColor', 'Borde exterior'], ['offerBackground', 'Fondo de OFERTA'],
+    ['offerTextColor', 'Texto de OFERTA'], ['offerShadowColor', 'Sombra de OFERTA'],
+    ['stampStartColor', 'Inicio del sello'], ['stampEndColor', 'Final del sello'],
+    ['stampTextColor', 'Texto del sello'], ['stampBackdropColor', 'Fondo detrás del sello'],
+    ['priceColor', 'Precio'], ['productTextColor', 'Nombre del producto'],
+  ];
 
   return (
     <section className="no-print rounded-[2rem] bg-white p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] lg:p-8">
@@ -34,9 +51,21 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         </div>
 
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto llamativo</span><select className={inputClass} value={poster.tagline} onChange={update('tagline')}>{TAGLINES.map((tagline) => <option key={tagline}>{tagline}</option>)}</select></label>
-        <label className="block"><span className="text-sm font-bold text-gray-700">Color del sello</span><select className={inputClass} value={poster.stampColor} onChange={update('stampColor')}>{Object.entries(STAMP_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Paleta rápida del sello</span><select className={inputClass} value={poster.stampColor} onChange={updateStampPreset}>{Object.entries(STAMP_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Forma del sello</span><select className={inputClass} value={poster.stampShape} onChange={update('stampShape')}>{Object.entries(STAMP_SHAPES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
-        <label className="block"><span className="text-sm font-bold text-gray-700">Color del borde</span><select className={inputClass} value={poster.borderColor} onChange={update('borderColor')}>{Object.entries(BORDER_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Paleta rápida del borde</span><select className={inputClass} value={poster.borderColor} onChange={updateBorderPreset}>{Object.entries(BORDER_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
+        <fieldset className="rounded-3xl border border-gray-200 p-4">
+          <legend className="px-2 text-sm font-black text-gray-800">Colores personalizados</legend>
+          <p className="mb-4 text-xs leading-5 text-gray-500">Elegí cualquier color para cada fondo, texto y accesorio del cartel.</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {colorFields.map(([field, label]) => (
+              <label key={field} className="flex items-center gap-3 rounded-2xl bg-gray-50 p-3">
+                <input aria-label={label} className="h-10 w-12 cursor-pointer rounded-lg border border-gray-200 bg-transparent p-1" type="color" value={poster[field] || DEFAULT_POSTER[field]} onChange={update(field)} />
+                <span className="text-xs font-bold text-gray-700">{label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
         <label className="block"><span className="text-sm font-bold text-gray-700">Copias del producto actual</span><input className={inputClass} min="1" type="number" value={poster.copies} onChange={update('copies')} /></label>
       </div>
 

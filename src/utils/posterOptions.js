@@ -7,10 +7,10 @@ export const SIZES = {
 export const TAGLINES = ['🔥 IMPERDIBLE', '💥 PRECIO ESPECIAL', '⭐ SUPER OFERTA', '🛒 APROVECHÁ'];
 
 export const STAMP_COLORS = {
-  red: { label: 'Rojo', className: 'from-red-500 to-red-700 text-white', hex: '#dc2626' },
-  orange: { label: 'Naranja', className: 'from-orange-400 to-orange-600 text-white', hex: '#ea580c' },
-  yellow: { label: 'Amarillo', className: 'from-yellow-300 to-yellow-500 text-red-950', hex: '#facc15' },
-  green: { label: 'Verde', className: 'from-emerald-400 to-emerald-600 text-white', hex: '#059669' },
+  red: { label: 'Rojo', startHex: '#ef4444', endHex: '#b91c1c', textHex: '#ffffff' },
+  orange: { label: 'Naranja', startHex: '#fb923c', endHex: '#ea580c', textHex: '#ffffff' },
+  yellow: { label: 'Amarillo', startHex: '#fde047', endHex: '#eab308', textHex: '#450a0a' },
+  green: { label: 'Verde', startHex: '#34d399', endHex: '#059669', textHex: '#ffffff' },
 };
 
 export const BORDER_COLORS = {
@@ -35,5 +35,18 @@ export const DEFAULT_POSTER = {
   stampColor: 'red',
   stampShape: 'circle',
   borderColor: 'red',
+  // Paleta libre: cada superficie y accesorio puede personalizarse.
+  posterBackground: '#ffffff',
+  innerBorderColor: '#fee2e2',
+  borderCustomColor: '#dc2626',
+  offerBackground: '#dc2626',
+  offerTextColor: '#ffffff',
+  offerShadowColor: '#991b1b',
+  stampStartColor: '#ef4444',
+  stampEndColor: '#b91c1c',
+  stampTextColor: '#ffffff',
+  stampBackdropColor: '#fde047',
+  priceColor: '#dc2626',
+  productTextColor: '#030712',
   copies: 1,
 };
