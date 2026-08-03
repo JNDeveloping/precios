@@ -29,19 +29,21 @@ export const STAMP_SHAPES = {
 const CLASSIC_COLORS = { posterBackground: '#ffffff', borderCustomColor: '#dc2626', innerBorderColor: '#fee2e2', offerBackground: '#dc2626', offerTextColor: '#ffffff', offerShadowColor: '#991b1b', stampStartColor: '#ef4444', stampEndColor: '#b91c1c', stampTextColor: '#ffffff', stampBackdropColor: '#fde047', priceColor: '#dc2626', productTextColor: '#030712' };
 
 export const TEMPLATES = {
-  classic: { label: 'Oferta clásica', description: 'Cartel tradicional de almacén', offerLabel: 'OFERTA', tagline: TAGLINES[0], stampShape: 'circle', colors: CLASSIC_COLORS },
-  twoForOne: { label: 'Promoción 2×1', description: 'Ideal para dos unidades al precio de una', offerLabel: '2×1', tagline: 'LLEVÁS 2 · PAGÁS 1', stampShape: 'burst', colors: { posterBackground: '#fff7ed', borderCustomColor: '#f97316', innerBorderColor: '#fdba74', offerBackground: '#f97316', offerShadowColor: '#c2410c', stampStartColor: '#fde047', stampEndColor: '#facc15', stampTextColor: '#7c2d12', stampBackdropColor: '#fb923c', priceColor: '#c2410c' } },
-  combo: { label: 'Combo especial', description: 'Para packs de varios productos', offerLabel: 'COMBO', tagline: 'TODO JUNTO A PRECIO ESPECIAL', stampShape: 'pill', colors: { posterBackground: '#f0fdf4', borderCustomColor: '#16a34a', innerBorderColor: '#86efac', offerBackground: '#16a34a', offerShadowColor: '#166534', stampStartColor: '#22c55e', stampEndColor: '#15803d', stampTextColor: '#ffffff', stampBackdropColor: '#bbf7d0', priceColor: '#15803d' } },
-  wholesale: { label: 'Precio mayorista', description: 'Para ofertas por cantidad', offerLabel: 'MAYORISTA', tagline: 'LLEVANDO MÁS, PAGÁS MENOS', stampShape: 'pill', colors: { posterBackground: '#eff6ff', borderCustomColor: '#2563eb', innerBorderColor: '#93c5fd', offerBackground: '#2563eb', offerShadowColor: '#1e3a8a', stampStartColor: '#60a5fa', stampEndColor: '#1d4ed8', stampTextColor: '#ffffff', stampBackdropColor: '#bfdbfe', priceColor: '#1d4ed8' } },
-  clearance: { label: 'Liquidación', description: 'Alto impacto para últimas unidades', offerLabel: 'LIQUIDACIÓN', tagline: 'ÚLTIMAS UNIDADES', stampShape: 'burst', colors: { posterBackground: '#fef2f2', borderCustomColor: '#111827', innerBorderColor: '#fca5a5', offerBackground: '#111827', offerShadowColor: '#dc2626', stampStartColor: '#ef4444', stampEndColor: '#991b1b', stampTextColor: '#ffffff', stampBackdropColor: '#fde047', priceColor: '#dc2626' } },
+  classic: { label: 'Oferta clásica', category: 'offers', favorite: true, description: 'Cartel tradicional de almacén', offerLabel: 'OFERTA', tagline: TAGLINES[0], stampShape: 'circle', colors: CLASSIC_COLORS },
+  twoForOne: { label: 'Promoción 2×1', category: 'offers', favorite: true, description: 'Dos unidades al precio de una', offerLabel: '2×1', tagline: 'LLEVÁS 2 · PAGÁS 1', stampShape: 'burst', colors: { posterBackground: '#fff7ed', borderCustomColor: '#f97316', innerBorderColor: '#fdba74', offerBackground: '#f97316', offerShadowColor: '#c2410c', stampStartColor: '#fde047', stampEndColor: '#facc15', stampTextColor: '#7c2d12', stampBackdropColor: '#fb923c', priceColor: '#c2410c' } },
+  combo: { label: 'Combo especial', category: 'new', description: 'Pack de varios productos', offerLabel: 'COMBO', tagline: 'TODO JUNTO A PRECIO ESPECIAL', stampShape: 'pill', colors: { posterBackground: '#f0fdf4', borderCustomColor: '#16a34a', innerBorderColor: '#86efac', offerBackground: '#16a34a', offerShadowColor: '#166534', stampStartColor: '#22c55e', stampEndColor: '#15803d', stampTextColor: '#ffffff', stampBackdropColor: '#bbf7d0', priceColor: '#15803d' } },
+  wholesale: { label: 'Precio mayorista', category: 'new', description: 'Oferta por cantidad', offerLabel: 'MAYORISTA', tagline: 'LLEVANDO MÁS, PAGÁS MENOS', stampShape: 'pill', colors: { posterBackground: '#eff6ff', borderCustomColor: '#2563eb', innerBorderColor: '#93c5fd', offerBackground: '#2563eb', offerShadowColor: '#1e3a8a', stampStartColor: '#60a5fa', stampEndColor: '#1d4ed8', stampTextColor: '#ffffff', stampBackdropColor: '#bfdbfe', priceColor: '#1d4ed8' } },
+  clearance: { label: 'Liquidación', category: 'offers', favorite: true, description: 'Para últimas unidades', offerLabel: 'LIQUIDACIÓN', tagline: 'ÚLTIMAS UNIDADES', stampShape: 'burst', colors: { posterBackground: '#fef2f2', borderCustomColor: '#111827', innerBorderColor: '#fca5a5', offerBackground: '#111827', offerShadowColor: '#dc2626', stampStartColor: '#ef4444', stampEndColor: '#991b1b', stampTextColor: '#ffffff', stampBackdropColor: '#fde047', priceColor: '#dc2626' } },
 };
 
 export const DEFAULT_POSITIONS = {
-  offer: { x: 24, y: 12 }, stamp: { x: 50, y: 34 }, price: { x: 50, y: 58 }, product: { x: 50, y: 77 },
+  business: { x: 50, y: 7 }, offer: { x: 24, y: 15 }, stamp: { x: 50, y: 32 }, image: { x: 50, y: 48 }, price: { x: 50, y: 63 }, product: { x: 50, y: 80 },
 };
 
 export const DEFAULT_POSTER = {
   template: 'classic',
+  businessName: 'El Rincon De Los Nietos',
+  productImage: '',
   productName: 'Yerba mate tradicional',
   price: '1.999',
   size: 'A4',

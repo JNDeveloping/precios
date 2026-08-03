@@ -49,6 +49,10 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
     <article id={printRef ? 'poster-print' : undefined} ref={printRef} className={`poster-page relative mx-auto w-full max-w-[794px] overflow-hidden ${size.previewClass}`} style={{ backgroundColor: colors.posterBackground, border: `5px solid ${border}`, '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}>
       <div className="absolute inset-5 rounded-[1.6rem] border-2" style={{ borderColor: colors.innerBorderColor }} />
 
+      <DraggableElement id="business" position={positions.business} enabled={movable} onMove={onPositionChange} className="w-[82%] text-center">
+        <div className="truncate font-black uppercase tracking-[0.18em]" style={{ color: colors.productTextColor, fontSize: 'clamp(12px, 2.2vw, 24px)' }}>{poster.businessName || 'El Rincon De Los Nietos'}</div>
+      </DraggableElement>
+
       <DraggableElement id="offer" position={positions.offer} enabled={movable} onMove={onPositionChange} className="max-w-[92%]">
         <div className="break-words px-10 py-3 font-black uppercase leading-none tracking-[0.16em]" style={{ backgroundColor: colors.offerBackground, color: colors.offerTextColor, boxShadow: `0 12px 0 ${colors.offerShadowColor}`, fontSize: getOfferFontSize(poster.offerLabel), whiteSpace: 'nowrap' }}>{poster.offerLabel || 'OFERTA'}</div>
       </DraggableElement>
@@ -59,6 +63,10 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
           <div className={`relative flex items-center break-words text-center ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`} style={{ background: `linear-gradient(135deg, ${colors.stampStartColor}, ${colors.stampEndColor})`, color: colors.stampTextColor }}>{poster.tagline}</div>
         </div>
       </DraggableElement>
+
+      {poster.productImage && <DraggableElement id="image" position={positions.image} enabled={movable} onMove={onPositionChange} className="h-[18%] w-[45%]">
+        <img src={poster.productImage} alt="Producto" className="h-full w-full object-contain drop-shadow-xl" draggable="false" />
+      </DraggableElement>}
 
       <DraggableElement id="price" position={positions.price} enabled={movable} onMove={onPositionChange} className="max-w-[94%] text-center leading-none tracking-tighter">
         <div style={{ color: colors.priceColor, whiteSpace: 'nowrap' }}><span className="align-top font-black" style={{ fontSize: getCurrencyFontSize(poster.price) }}>$</span><span className="font-black" style={{ fontSize: getPriceFontSize(poster.price) }}>{poster.price || '0'}</span></div>

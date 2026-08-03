@@ -1,8 +1,10 @@
-import { Download, Move, Plus, Printer, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Download, ImagePlus, Move, Plus, Printer, RotateCcw, Save, Sparkles, Star, Trash2, X } from 'lucide-react';
 import { BORDER_COLORS, DEFAULT_POSITIONS, DEFAULT_POSTER, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES, TEMPLATES } from '../utils/posterOptions.js';
 
 // Panel de carga optimizado para operar rápido desde teclado o mouse.
 export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport, onPrint, onSave, onRemoveSaved }) {
+  const [templateFilter, setTemplateFilter] = useState('all');
   const update = (field) => (event) => onChange({ ...poster, [field]: event.target.value });
   const updateStampPreset = (event) => {
     const key = event.target.value;
@@ -13,11 +15,18 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
     const key = event.target.value;
     onChange({ ...poster, borderColor: key, borderCustomColor: BORDER_COLORS[key].hex });
   };
-  const updateTemplate = (event) => {
-    const key = event.target.value;
+  const updateTemplate = (key) => {
     const template = TEMPLATES[key];
     onChange({ ...poster, template: key, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
   };
+  const updateImage = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => onChange({ ...poster, productImage: reader.result });
+    reader.readAsDataURL(file);
+  };
+  const visibleTemplates = Object.entries(TEMPLATES).filter(([, template]) => templateFilter === 'all' || (templateFilter === 'favorites' ? template.favorite : template.category === templateFilter));
   const inputClass = 'mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-100';
   const colorFields = [
     ['posterBackground', 'Fondo de la hoja'], ['innerBorderColor', 'Borde interior'],
@@ -40,9 +49,27 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
       </div>
 
       <div className="space-y-5">
-        <label className="block"><span className="text-sm font-bold text-gray-700">Plantilla del cartel</span><select className={inputClass} value={poster.template || 'classic'} onChange={updateTemplate}>{Object.entries(TEMPLATES).map(([key, template]) => <option key={key} value={key}>{template.label} — {template.description}</option>)}</select></label>
+        <div>
+          <div className="mb-3 flex items-center justify-between"><span className="text-sm font-black text-gray-800">Elegí una plantilla</span><span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-500">{Object.keys(TEMPLATES).length} diseños</span></div>
+          <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
+            {[['all', 'Todos'], ['favorites', '★ Favoritos'], ['new', '▣ Nuevas'], ['offers', '● Ofertas']].map(([key, label]) => <button type="button" key={key} onClick={() => setTemplateFilter(key)} className={`whitespace-nowrap rounded-full px-3 py-2 text-xs font-black transition ${templateFilter === key ? 'bg-gray-950 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{label}</button>)}
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {visibleTemplates.map(([key, template]) => <button type="button" key={key} onClick={() => updateTemplate(key)} className={`group text-left ${poster.template === key ? 'text-red-600' : 'text-gray-700'}`}>
+              <div className={`relative aspect-[3/4] overflow-hidden rounded-2xl border-2 p-2 shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg ${poster.template === key ? 'border-red-500 ring-4 ring-red-100' : 'border-gray-200'}`} style={{ backgroundColor: template.colors.posterBackground }}>
+                {template.favorite && <Star size={14} className="absolute right-2 top-2 z-10 fill-yellow-400 text-yellow-500" />}
+                <div className="mt-3 h-3 w-3/4 rounded-sm" style={{ backgroundColor: template.colors.offerBackground }} />
+                <div className="mx-auto mt-5 h-9 w-16 rounded-full" style={{ background: `linear-gradient(135deg, ${template.colors.stampStartColor}, ${template.colors.stampEndColor})` }} />
+                <div className="mx-auto mt-4 h-4 w-3/4 rounded" style={{ backgroundColor: template.colors.priceColor }} />
+                <div className="mx-auto mt-3 h-2 w-2/3 rounded bg-gray-800" />
+              </div><span className="mt-2 block truncate text-xs font-black">{template.label}</span><span className="block truncate text-[10px] text-gray-400">{template.description}</span>
+            </button>)}
+          </div>
+        </div>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del negocio</span><input className={inputClass} value={poster.businessName || ''} onChange={update('businessName')} placeholder="El Rincon De Los Nietos" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
+        <div><span className="text-sm font-bold text-gray-700">Imagen del producto <span className="font-normal text-gray-400">(opcional)</span></span><label className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-4 font-bold text-gray-600 transition hover:border-red-300 hover:bg-red-50"><ImagePlus size={19} /> {poster.productImage ? 'Cambiar imagen' : 'Agregar imagen'}<input className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={updateImage} /></label>{poster.productImage && <button type="button" onClick={() => onChange({ ...poster, productImage: '' })} className="mt-2 inline-flex items-center gap-1 text-xs font-black text-red-600"><X size={14} /> Quitar imagen</button>}</div>
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
 
         <div>
@@ -72,7 +99,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
             ))}
           </div>
         </fieldset>
-        <div className="rounded-2xl bg-blue-50 p-4 text-sm leading-6 text-blue-900"><div className="flex items-center gap-2 font-black"><Move size={17} /> Objetos movibles</div>Arrastrá textos, precio y sello directamente sobre la vista previa.<button type="button" className="mt-2 block font-black text-blue-700 underline" onClick={() => onChange({ ...poster, positions: DEFAULT_POSITIONS })}>Restablecer posiciones</button></div>
+        <div className="rounded-2xl bg-blue-50 p-4 text-sm leading-6 text-blue-900"><div className="flex items-center gap-2 font-black"><Move size={17} /> Objetos movibles</div>Arrastrá el negocio, textos, precio, sello e imagen directamente sobre la vista previa.<button type="button" className="mt-2 block font-black text-blue-700 underline" onClick={() => onChange({ ...poster, positions: DEFAULT_POSITIONS })}>Restablecer posiciones</button></div>
         <label className="block"><span className="text-sm font-bold text-gray-700">Copias del producto actual</span><input className={inputClass} min="1" type="number" value={poster.copies} onChange={update('copies')} /></label>
       </div>
 
