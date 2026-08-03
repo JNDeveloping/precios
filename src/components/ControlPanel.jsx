@@ -1,5 +1,5 @@
-import { Download, Plus, Printer, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react';
-import { BORDER_COLORS, DEFAULT_POSTER, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES } from '../utils/posterOptions.js';
+import { Download, Move, Plus, Printer, RotateCcw, Save, Sparkles, Trash2 } from 'lucide-react';
+import { BORDER_COLORS, DEFAULT_POSITIONS, DEFAULT_POSTER, SIZES, STAMP_COLORS, STAMP_SHAPES, TAGLINES, TEMPLATES } from '../utils/posterOptions.js';
 
 // Panel de carga optimizado para operar rápido desde teclado o mouse.
 export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport, onPrint, onSave, onRemoveSaved }) {
@@ -12,6 +12,11 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
   const updateBorderPreset = (event) => {
     const key = event.target.value;
     onChange({ ...poster, borderColor: key, borderCustomColor: BORDER_COLORS[key].hex });
+  };
+  const updateTemplate = (event) => {
+    const key = event.target.value;
+    const template = TEMPLATES[key];
+    onChange({ ...poster, template: key, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
   };
   const inputClass = 'mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-100';
   const colorFields = [
@@ -35,6 +40,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
       </div>
 
       <div className="space-y-5">
+        <label className="block"><span className="text-sm font-bold text-gray-700">Plantilla del cartel</span><select className={inputClass} value={poster.template || 'classic'} onChange={updateTemplate}>{Object.entries(TEMPLATES).map(([key, template]) => <option key={key} value={key}>{template.label} — {template.description}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel rojo</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Precio</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
@@ -50,7 +56,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
           </div>
         </div>
 
-        <label className="block"><span className="text-sm font-bold text-gray-700">Texto llamativo</span><select className={inputClass} value={poster.tagline} onChange={update('tagline')}>{TAGLINES.map((tagline) => <option key={tagline}>{tagline}</option>)}</select></label>
+        <label className="block"><span className="text-sm font-bold text-gray-700">Texto llamativo</span><input className={inputClass} list="tagline-options" value={poster.tagline} onChange={update('tagline')} /><datalist id="tagline-options">{TAGLINES.map((tagline) => <option key={tagline} value={tagline} />)}</datalist></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Paleta rápida del sello</span><select className={inputClass} value={poster.stampColor} onChange={updateStampPreset}>{Object.entries(STAMP_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Forma del sello</span><select className={inputClass} value={poster.stampShape} onChange={update('stampShape')}>{Object.entries(STAMP_SHAPES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Paleta rápida del borde</span><select className={inputClass} value={poster.borderColor} onChange={updateBorderPreset}>{Object.entries(BORDER_COLORS).map(([key, color]) => <option key={key} value={key}>{color.label}</option>)}</select></label>
@@ -66,6 +72,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
             ))}
           </div>
         </fieldset>
+        <div className="rounded-2xl bg-blue-50 p-4 text-sm leading-6 text-blue-900"><div className="flex items-center gap-2 font-black"><Move size={17} /> Objetos movibles</div>Arrastrá textos, precio y sello directamente sobre la vista previa.<button type="button" className="mt-2 block font-black text-blue-700 underline" onClick={() => onChange({ ...poster, positions: DEFAULT_POSITIONS })}>Restablecer posiciones</button></div>
         <label className="block"><span className="text-sm font-bold text-gray-700">Copias del producto actual</span><input className={inputClass} min="1" type="number" value={poster.copies} onChange={update('copies')} /></label>
       </div>
 
