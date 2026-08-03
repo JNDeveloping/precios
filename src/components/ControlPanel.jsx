@@ -21,7 +21,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
     const template = TEMPLATES[key];
     const needsProducts = key === 'twoForOne' || key === 'combo';
     const additionalProducts = needsProducts && !poster.additionalProducts?.length ? [''] : (poster.additionalProducts || []);
-    onChange({ ...poster, template: key, additionalProducts, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
+    onChange({ ...poster, template: key, positions: DEFAULT_POSITIONS, additionalProducts, ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
     if (needsProducts) window.requestAnimationFrame(() => document.getElementById('additional-products')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   };
   const updateAdditionalProduct = (index, value) => onChange({ ...poster, additionalProducts: poster.additionalProducts.map((item, itemIndex) => itemIndex === index ? value : item) });

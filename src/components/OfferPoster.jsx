@@ -3,7 +3,7 @@ import { BORDER_COLORS, DEFAULT_POSITIONS, DEFAULT_POSTER, SIZES } from '../util
 import { getCurrencyFontSize, getOfferFontSize, getPriceFontSize, getProductFontSize } from '../utils/textSizing.js';
 
 const shapeClasses = {
-  circle: 'rounded-full aspect-square min-h-32 justify-center',
+  circle: 'rounded-full aspect-square justify-center',
   pill: 'rounded-full',
   burst: 'rounded-[35%_65%_45%_55%/55%_40%_60%_45%] rotate-[-4deg]',
 };
@@ -13,11 +13,16 @@ function TemplateDecorations({ template, colors }) {
   if (template === 'twoForOne') return <><div className="absolute -right-[20%] -top-[4%] h-[34%] w-[90%] -rotate-12 bg-yellow-300 opacity-70" /><div className="absolute bottom-0 left-0 h-[15%] w-full bg-orange-100" /></>;
   if (template === 'combo') return <><div className="absolute -left-[25%] top-[20%] h-[22%] w-[85%] rotate-12 bg-emerald-100" /><div className="absolute -right-[20%] bottom-[5%] h-[25%] w-[85%] -rotate-12 bg-green-200" /></>;
   if (template === 'wholesale') return <><div className="absolute inset-x-0 top-0 h-[18%] bg-blue-100" /><div className="absolute inset-x-0 bottom-0 h-[16%] bg-blue-200" /></>;
+  if (template === 'neon') return <><div className="absolute -right-[15%] top-[4%] h-[28%] w-[65%] rotate-12 rounded-[30%] bg-yellow-300" /><div className="absolute -bottom-[10%] -left-[20%] h-[30%] w-[90%] -rotate-6 bg-pink-200" /></>;
+  if (template === 'fresh') return <><div className="absolute -left-[15%] top-[22%] h-[23%] w-[55%] rotate-12 rounded-full bg-lime-200" /><div className="absolute -right-[20%] bottom-[5%] h-[28%] w-[70%] -rotate-12 rounded-full bg-emerald-200" /></>;
+  if (template === 'weekend') return <><div className="absolute inset-x-0 top-0 h-[22%] -skew-y-6 bg-blue-200" /><div className="absolute inset-x-0 bottom-0 h-[19%] skew-y-6 bg-rose-200" /></>;
+  if (template === 'blackFriday') return <><div className="absolute left-0 top-[22%] h-2 w-full rotate-3 bg-yellow-400" /><div className="absolute bottom-[12%] left-0 h-3 w-full -rotate-3 bg-red-600" /></>;
+  if (template === 'clean') return <><div className="absolute right-0 top-0 h-full w-[8%] bg-slate-900" /><div className="absolute bottom-0 left-0 h-[10%] w-[65%] bg-rose-500" /></>;
   return <div className="absolute bottom-0 left-0 h-[10%] w-full opacity-30" style={{ backgroundColor: colors.innerBorderColor }} />;
 }
 
 // Guarda coordenadas porcentuales para que la composición sea idéntica en A4, A5 y PDF.
-function DraggableElement({ id, position, enabled, onMove, className = '', children }) {
+function DraggableElement({ id, position, enabled, onMove, className = '', style, children }) {
   const itemRef = useRef(null);
 
   const handlePointerDown = (event) => {
@@ -43,7 +48,7 @@ function DraggableElement({ id, position, enabled, onMove, className = '', child
     item.addEventListener('pointercancel', stop);
   };
 
-  return <div ref={itemRef} data-poster-object={id} onPointerDown={handlePointerDown} className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 ${enabled ? 'cursor-grab touch-none select-none hover:outline hover:outline-2 hover:outline-blue-400 active:cursor-grabbing' : ''} ${className}`} style={{ left: `${position.x}%`, top: `${position.y}%` }}>{children}</div>;
+  return <div ref={itemRef} data-poster-object={id} onPointerDown={handlePointerDown} className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 ${enabled ? 'cursor-grab touch-none select-none hover:outline hover:outline-2 hover:outline-blue-400 active:cursor-grabbing' : ''} ${className}`} style={{ left: `${position.x}%`, top: `${position.y}%`, ...style }}>{children}</div>;
 }
 
 export function PrintablePoster({ poster, printRef, onPositionChange }) {
@@ -54,27 +59,27 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
   const movable = Boolean(printRef && onPositionChange);
 
   return (
-    <article id={printRef ? 'poster-print' : undefined} ref={printRef} className={`poster-page relative mx-auto w-full max-w-[794px] overflow-hidden ${size.previewClass}`} style={{ backgroundColor: colors.posterBackground, border: `5px solid ${border}`, '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}>
+    <article id={printRef ? 'poster-print' : undefined} ref={printRef} className={`poster-page relative mx-auto w-full max-w-[794px] overflow-hidden ${printRef ? 'lg:h-[calc(100vh-8rem)] lg:w-auto lg:max-w-full' : ''} ${size.previewClass}`} style={{ containerType: 'inline-size', backgroundColor: colors.posterBackground, border: `5px solid ${border}`, '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}>
       <TemplateDecorations template={poster.template} colors={colors} />
       <div className="absolute inset-5 rounded-[1.6rem] border-2" style={{ borderColor: colors.innerBorderColor }} />
 
       <DraggableElement id="business" position={positions.business} enabled={movable} onMove={onPositionChange} className="w-[82%] text-center">
-        <div className="truncate font-black uppercase tracking-[0.18em]" style={{ color: colors.productTextColor, fontSize: 'clamp(12px, 2.2vw, 24px)' }}>{poster.businessName || 'El Rincon De Los Nietos'}</div>
+        <div className="truncate font-black uppercase tracking-[0.18em]" style={{ color: colors.productTextColor, fontSize: '3cqw' }}>{poster.businessName || 'El Rincon De Los Nietos'}</div>
       </DraggableElement>
 
       <DraggableElement id="offer" position={positions.offer} enabled={movable} onMove={onPositionChange} className="max-w-[92%]">
-        <div className="break-words px-10 py-3 font-black uppercase leading-none tracking-[0.16em]" style={{ backgroundColor: colors.offerBackground, color: colors.offerTextColor, boxShadow: `0 12px 0 ${colors.offerShadowColor}`, fontSize: getOfferFontSize(poster.offerLabel), whiteSpace: 'nowrap' }}>{poster.offerLabel || 'OFERTA'}</div>
+        <div className="break-words font-black uppercase leading-none tracking-[0.16em]" style={{ backgroundColor: colors.offerBackground, color: colors.offerTextColor, boxShadow: `0 1.5cqw 0 ${colors.offerShadowColor}`, fontSize: getOfferFontSize(poster.offerLabel), padding: '1.5cqw 5cqw', whiteSpace: 'nowrap' }}>{poster.offerLabel || 'OFERTA'}</div>
       </DraggableElement>
 
       <DraggableElement id="stamp" position={positions.stamp} enabled={movable} onMove={onPositionChange} className="max-w-[85%]">
         <div className="relative">
           <div className={`absolute -inset-3 opacity-70 blur-md ${shapeClasses[poster.stampShape]}`} style={{ backgroundColor: colors.stampBackdropColor }} />
-          <div className={`relative flex items-center break-words text-center ${shapeClasses[poster.stampShape]} px-8 py-5 text-2xl font-black uppercase shadow-xl ring-8 ring-white sm:text-3xl`} style={{ background: `linear-gradient(135deg, ${colors.stampStartColor}, ${colors.stampEndColor})`, color: colors.stampTextColor }}>{poster.tagline}</div>
+          <div className={`relative flex items-center break-words text-center ${shapeClasses[poster.stampShape]} font-black uppercase shadow-xl ring-8 ring-white`} style={{ background: `linear-gradient(135deg, ${colors.stampStartColor}, ${colors.stampEndColor})`, color: colors.stampTextColor, fontSize: '3.5cqw', minHeight: '16cqw', padding: '2.5cqw 4cqw' }}>{poster.tagline}</div>
         </div>
       </DraggableElement>
 
-      {poster.productImage && <DraggableElement id="image" position={positions.image} enabled={movable} onMove={onPositionChange} className="h-[18%] w-[45%]">
-        <img src={poster.productImage} alt="Producto" className="h-full w-full object-contain drop-shadow-xl" style={{ transform: `scale(${(Number(poster.imageScale) || 100) / 100})` }} draggable="false" />
+      {poster.productImage && <DraggableElement id="image" position={positions.image} enabled={movable} onMove={onPositionChange} style={{ height: `${18 * ((Number(poster.imageScale) || 100) / 100)}%`, width: `${45 * ((Number(poster.imageScale) || 100) / 100)}%` }}>
+        <img src={poster.productImage} alt="Producto" className="h-full w-full object-contain drop-shadow-xl" draggable="false" />
       </DraggableElement>}
 
       <DraggableElement id="price" position={positions.price} enabled={movable} onMove={onPositionChange} className="max-w-[94%] text-center leading-none tracking-tighter">
@@ -93,5 +98,5 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
 
 export function OfferPoster({ poster, printRef, onPositionChange }) {
   const size = SIZES[poster.size];
-  return <div className="preview-card w-full rounded-[2rem] bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:p-6"><div className="preview-title mb-4 flex items-center justify-between text-sm font-bold text-gray-500"><span>Vista previa · arrastrá los objetos para moverlos</span><span>{size.label} · {size.widthMm}×{size.heightMm} mm</span></div><PrintablePoster poster={poster} printRef={printRef} onPositionChange={onPositionChange} /></div>;
+  return <div className="preview-card flex w-full flex-col rounded-[2rem] bg-white p-4 shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:p-6 lg:h-[calc(100vh-3rem)]"><div className="preview-title mb-4 flex shrink-0 items-center justify-between text-sm font-bold text-gray-500"><span>Vista previa · arrastrá los objetos para moverlos</span><span>{size.label} · {size.widthMm}×{size.heightMm} mm</span></div><div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden"><PrintablePoster poster={poster} printRef={printRef} onPositionChange={onPositionChange} /></div></div>;
 }

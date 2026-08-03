@@ -51,7 +51,8 @@ export async function exportPosterPdf(element, sizeKey, posters) {
     for (const [index, page] of pages.entries()) {
       const canvas = await renderPage(page);
       if (index > 0) pdf.addPage([size.widthMm, size.heightMm], 'portrait');
-      pdf.addImage(canvas.toDataURL('image/jpeg', 1), 'JPEG', 0, 0, size.widthMm, size.heightMm, undefined, 'FAST');
+      // PNG evita artefactos y mantiene transparencias/bordes nítidos en imágenes de producto.
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, size.widthMm, size.heightMm, undefined, 'FAST');
     }
 
     pdf.save(fileName);

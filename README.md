@@ -15,7 +15,7 @@ Luego abrí la URL que informa Vite en la terminal.
 
 - Editá producto, precio, tamaño, texto del cartel rojo, texto llamativo y forma del sello.
 - Elegí cualquier color para el fondo de la hoja, los bordes, el cartel de oferta, el sello, su fondo, el precio y el nombre del producto.
-- Partí de plantillas listas para almacén: oferta clásica, 2×1, combo especial, precio mayorista y liquidación.
+- Partí de 10 plantillas llamativas para almacén, incluyendo oferta clásica, 2×1, combo, mayorista, liquidación, neón, frescos, fin de semana, black promo y moderna.
 - Las plantillas 2×1 y Combo habilitan campos específicos para sumar un segundo producto o todos los productos que formen el combo.
 - Explorá las plantillas como una galería visual, con filtros de favoritas, nuevas y ofertas.
 - Personalizá el nombre del negocio (por defecto, “El Rincon De Los Nietos”) y agregá opcionalmente una imagen del producto.
