@@ -65,7 +65,7 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
       </DraggableElement>
 
       {poster.productImage && <DraggableElement id="image" position={positions.image} enabled={movable} onMove={onPositionChange} className="h-[18%] w-[45%]">
-        <img src={poster.productImage} alt="Producto" className="h-full w-full object-contain drop-shadow-xl" draggable="false" />
+        <img src={poster.productImage} alt="Producto" className="h-full w-full object-contain drop-shadow-xl" style={{ transform: `scale(${(Number(poster.imageScale) || 100) / 100})` }} draggable="false" />
       </DraggableElement>}
 
       <DraggableElement id="price" position={positions.price} enabled={movable} onMove={onPositionChange} className="max-w-[94%] text-center leading-none tracking-tighter">

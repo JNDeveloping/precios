@@ -18,6 +18,7 @@ Luego abrí la URL que informa Vite en la terminal.
 - Partí de plantillas listas para almacén: oferta clásica, 2×1, combo especial, precio mayorista y liquidación.
 - Explorá las plantillas como una galería visual, con filtros de favoritas, nuevas y ofertas.
 - Personalizá el nombre del negocio (por defecto, “El Rincon De Los Nietos”) y agregá opcionalmente una imagen del producto.
+- Ajustá el tamaño de la imagen y activá opcionalmente la eliminación automática de fondos lisos, procesada íntegramente en el navegador.
 - Mové el cartel de oferta, el sello, el precio y el producto arrastrándolos con el mouse o con una pantalla táctil; las posiciones también se conservan al guardar y exportar.
 - La vista previa se actualiza automáticamente y achica precio/nombre cuando son largos para que no sobresalgan.
 - Indicá la cantidad de copias del producto actual antes de exportar.
