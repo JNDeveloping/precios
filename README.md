@@ -11,6 +11,15 @@ npm run dev
 
 Luego abrí la URL que informa Vite en la terminal.
 
+## Build de producción
+
+```bash
+npm run build
+npm run preview
+```
+
+El build queda en `dist/`. `npm run build` solo genera los archivos: no inicia un servidor. Para comprobarlo, abrí la URL que muestra `npm run preview`; no abras `dist/index.html` directamente con `file://`, porque los módulos del navegador necesitan servirse por HTTP. Las rutas de los assets son relativas, por lo que también se puede publicar la aplicación en un subdirectorio como `/precios/`.
+
 ## Uso
 
 - Editá producto, precio, tamaño, texto del cartel rojo, texto llamativo y forma del sello.
