@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
-// Rutas relativas para que el build funcione tanto en la raíz del dominio
-// como en subdirectorios (por ejemplo, https://dominio.com/precios/).
+// La aplicación se publica específicamente bajo grupolosnietos.com.ar/precios/.
+// Una base absoluta evita que los assets apunten a /assets o /src en el dominio.
 export default defineConfig({
-  base: './',
+  base: '/precios/',
 });

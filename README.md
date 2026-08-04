@@ -18,7 +18,21 @@ npm run build
 npm run preview
 ```
 
-El build queda en `dist/`. `npm run build` solo genera los archivos: no inicia un servidor. Para comprobarlo, abrí la URL que muestra `npm run preview`; no abras `dist/index.html` directamente con `file://`, porque los módulos del navegador necesitan servirse por HTTP. Las rutas de los assets son relativas, por lo que también se puede publicar la aplicación en un subdirectorio como `/precios/`.
+El build queda en `dist/`. `npm run build` solo genera los archivos: no inicia un servidor. Para comprobarlo, abrí la URL que muestra `npm run preview`; no abras `dist/index.html` directamente con `file://`, porque los módulos del navegador necesitan servirse por HTTP.
+
+### Publicar en grupolosnietos.com.ar/precios/
+
+La aplicación está configurada para ese subdirectorio. En el servidor se debe publicar **el contenido de `dist/`**, no los archivos fuente del repositorio:
+
+```bash
+npm ci
+npm run build
+sudo mkdir -p /var/www/html/precios
+sudo rm -rf /var/www/html/precios/*
+sudo cp -a dist/. /var/www/html/precios/
+```
+
+Después, `https://grupolosnietos.com.ar/precios/` debe entregar el `index.html` compilado, que referencia archivos bajo `/precios/assets/`. Si el HTML publicado contiene `/src/main.jsx`, se copió el proyecto fuente en vez del build y la página quedará en blanco.
 
 ## Uso
 
