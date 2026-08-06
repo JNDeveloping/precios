@@ -27,12 +27,83 @@ La aplicación está configurada para ese subdirectorio. En el servidor se debe 
 ```bash
 npm ci
 npm run build
-sudo mkdir -p /var/www/html/precios
-sudo rm -rf /var/www/html/precios/*
-sudo cp -a dist/. /var/www/html/precios/
+sudo mkdir -p /var/www/grupolosnietos/precios
+sudo rm -rf /var/www/grupolosnietos/precios/*
+sudo cp -a dist/. /var/www/grupolosnietos/precios/
+sudo chown -R www-data:www-data /var/www/grupolosnietos/precios
+sudo find /var/www/grupolosnietos -type d -exec chmod 755 {} \;
+sudo find /var/www/grupolosnietos -type f -exec chmod 644 {} \;
+sudo systemctl reload apache2
 ```
 
+> Si tu `DocumentRoot` real es otro, cambiá `/var/www/grupolosnietos` por la carpeta que muestre Apache con `apachectl -S`.
+
 Después, `https://grupolosnietos.com.ar/precios/` debe entregar el `index.html` compilado, que referencia archivos bajo `/precios/assets/`. Si el HTML publicado contiene `/src/main.jsx`, se copió el proyecto fuente en vez del build y la página quedará en blanco.
+
+### Error 403: “You don't have permission to access this resource.”
+
+Ese error es de Apache, no de React. Significa que el servidor no puede leer la carpeta publicada o que el virtual host no permite servir `/precios/`. Revisá estos puntos en Ubuntu:
+
+1. Confirmá cuál es el `DocumentRoot` activo:
+
+```bash
+sudo apachectl -S
+```
+
+2. Verificá que el build exista dentro de la carpeta pública y que no esté el código fuente:
+
+```bash
+find /var/www/grupolosnietos/precios -maxdepth 2 -type f | sort | head -30
+cat /var/www/grupolosnietos/precios/index.html | sed -n '1,30p'
+```
+
+El archivo correcto debe tener referencias a `/precios/assets/...`, no a `/src/main.jsx`.
+
+3. Aplicá permisos de lectura/ejecución para Apache:
+
+```bash
+sudo chown -R www-data:www-data /var/www/grupolosnietos/precios
+sudo find /var/www/grupolosnietos -type d -exec chmod 755 {} \;
+sudo find /var/www/grupolosnietos -type f -exec chmod 644 {} \;
+```
+
+4. Asegurate de que el virtual host permita acceder al directorio. En el archivo del sitio, por ejemplo `/etc/apache2/sites-available/grupolosnietos.conf`, debe existir un bloque similar:
+
+```apache
+<VirtualHost *:80>
+  ServerName grupolosnietos.com.ar
+  DocumentRoot /var/www/grupolosnietos
+
+  <Directory /var/www/grupolosnietos>
+    Options -Indexes +FollowSymLinks
+    AllowOverride All
+    Require all granted
+  </Directory>
+</VirtualHost>
+```
+
+Si usás HTTPS, el mismo bloque `<Directory ...>` también debe estar disponible para el virtual host de `:443`.
+
+5. Habilitá `rewrite` y recargá Apache para que funcione el `.htaccess` incluido en el build:
+
+```bash
+sudo a2enmod rewrite
+sudo apachectl configtest
+sudo systemctl reload apache2
+```
+
+6. Probá desde el servidor:
+
+```bash
+curl -I https://grupolosnietos.com.ar/precios/
+curl -s https://grupolosnietos.com.ar/precios/ | sed -n '1,30p'
+```
+
+Si sigue apareciendo `403`, mirá el motivo exacto en el log:
+
+```bash
+sudo tail -n 80 /var/log/apache2/error.log
+```
 
 ## Uso
 
