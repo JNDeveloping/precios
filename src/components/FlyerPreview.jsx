@@ -1,4 +1,4 @@
-import { FLYER_SIZES } from '../utils/flyerOptions.js';
+import { FLYER_SIZES, FLYER_TEMPLATES } from '../utils/flyerOptions.js';
 
 function ProductCard({ product, flyer }) {
   return (
@@ -23,10 +23,13 @@ export function PrintableFlyer({ flyer, flyerRef }) {
   const size = FLYER_SIZES[flyer.size] || FLYER_SIZES.A4;
   const landscape = flyer.orientation === 'landscape';
   const ratio = landscape ? `${size.height}/${size.width}` : `${size.width}/${size.height}`;
+  const pattern = FLYER_TEMPLATES[flyer.template]?.pattern;
   return (
     <article ref={flyerRef} id={flyerRef ? 'flyer-print' : undefined} className="flyer-page relative mx-auto flex w-full max-w-[794px] flex-col overflow-hidden" style={{ aspectRatio: ratio, containerType: 'inline-size', background: flyer.background, '--flyer-width': `${landscape ? size.height : size.width}mm`, '--flyer-height': `${landscape ? size.width : size.height}mm` }}>
-      <header className="relative shrink-0 overflow-hidden px-[5cqw] py-[3.3cqw] text-center" style={{ background: flyer.header, color: flyer.headerText }}>
+      <header className="relative shrink-0 overflow-hidden px-[7cqw] py-[3.3cqw] text-center" style={{ background: flyer.header, color: flyer.headerText }}>
         {flyer.bannerImage && <img src={flyer.bannerImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ opacity: Number(flyer.bannerOpacity) / 100 }} />}
+        {pattern === 'checker' && <><div className="flyer-checkers absolute inset-y-0 left-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /><div className="flyer-checkers absolute inset-y-0 right-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /></>}
+        {pattern === 'waves' && <div className="absolute inset-x-0 bottom-0 h-[1.4cqw] opacity-80" style={{ background: `repeating-radial-gradient(circle at 1cqw 0, transparent 0 .65cqw, ${flyer.accent} .7cqw 1cqw)` }} />}
         <div className="relative flex items-center justify-center gap-[3cqw]">
           {flyer.logo && <img src={flyer.logo} alt="Logo" className="h-[10cqw] w-[10cqw] rounded-[2cqw] bg-white object-contain p-[1cqw]" />}
           <div><p className="font-black uppercase tracking-[.15em] opacity-90" style={{ fontSize: '2.6cqw' }}>{flyer.businessName}</p><h1 className="mt-[.7cqw] font-black uppercase leading-none tracking-tight" style={{ color: flyer.accent, fontSize: '7cqw', textShadow: '0 .8cqw 0 rgba(0,0,0,.18)' }}>{flyer.title}</h1><p className="mt-[1cqw] font-extrabold" style={{ fontSize: '2.6cqw' }}>{flyer.subtitle}</p></div>
@@ -42,5 +45,5 @@ export function PrintableFlyer({ flyer, flyerRef }) {
 }
 
 export function FlyerPreview({ flyer, flyerRef }) {
-  return <div className="flyer-preview-card flex w-full flex-col rounded-[2rem] bg-slate-900 p-4 shadow-2xl sm:p-6 lg:h-[calc(100vh-7rem)]"><div className="preview-title mb-4 flex shrink-0 items-center justify-between text-sm font-bold text-slate-300"><span>Vista previa del folleto</span><span>{flyer.size} · {flyer.orientation === 'portrait' ? 'Vertical' : 'Horizontal'}</span></div><div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden"><PrintableFlyer flyer={flyer} flyerRef={flyerRef} /></div></div>;
+  return <div className="flyer-preview-card flex w-full flex-col rounded-[2rem] border border-emerald-400/20 bg-[#07130d] p-4 shadow-[0_28px_80px_rgba(0,0,0,.35)] sm:p-6 lg:h-[calc(100vh-7rem)]"><div className="preview-title mb-4 flex shrink-0 items-center justify-between text-sm font-bold text-emerald-100/70"><span>Vista previa del folleto</span><span className="rounded-full bg-lime-400 px-3 py-1 text-xs font-black text-[#07130d]">{flyer.size} · {flyer.orientation === 'portrait' ? 'Vertical' : 'Horizontal'}</span></div><div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden"><PrintableFlyer flyer={flyer} flyerRef={flyerRef} /></div></div>;
 }

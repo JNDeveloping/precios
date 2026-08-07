@@ -1,4 +1,16 @@
 export const FLYER_TEMPLATES = {
+  rincon: {
+    label: 'Rincón identidad', description: 'Negro y verde institucional', category: 'Marca', pattern: 'checker',
+    colors: { background: '#f3f8f2', header: '#062719', headerText: '#ffffff', accent: '#38f21a', card: '#ffffff', price: '#087a3e', text: '#082116', border: '#20c55a' },
+  },
+  rinconNight: {
+    label: 'Rincón nocturno', description: 'Negro profundo y verde neón', category: 'Marca', pattern: 'checker',
+    colors: { background: '#07130d', header: '#020806', headerText: '#ffffff', accent: '#83f52c', card: '#10231a', price: '#83f52c', text: '#ffffff', border: '#35d468' },
+  },
+  rinconFresh: {
+    label: 'Rincón fresco', description: 'Verde brillante y crema', category: 'Marca', pattern: 'waves',
+    colors: { background: '#ecf8e8', header: '#0b3b24', headerText: '#ffffff', accent: '#a3e635', card: '#ffffff', price: '#166534', text: '#102a1b', border: '#4ade80' },
+  },
   supermarket: {
     label: 'Súper ofertas', description: 'Rojo, blanco y amarillo', category: 'Ofertas',
     colors: { background: '#fff7ed', header: '#e30613', headerText: '#ffffff', accent: '#ffe600', card: '#ffffff', price: '#e30613', text: '#172033', border: '#e30613' },
@@ -30,11 +42,11 @@ export const DEFAULT_FLYER_PRODUCT = {
 };
 
 export const DEFAULT_FLYER = {
-  template: 'supermarket', size: 'A4', orientation: 'portrait',
+  template: 'rincon', size: 'A4', orientation: 'portrait',
   businessName: 'El Rincon De Los Nietos', title: '¡SÚPER OFERTAS!', subtitle: 'Precios increíbles por tiempo limitado', validity: 'Válido hasta agotar stock', footer: 'Las imágenes son ilustrativas. Consultá disponibilidad.',
   columns: 2, cardRadius: 22, cardGap: 12, showDiscount: true, showOldPrice: true, showDescription: true,
   logo: '', bannerImage: '', bannerOpacity: 28,
-  ...FLYER_TEMPLATES.supermarket.colors,
+  ...FLYER_TEMPLATES.rincon.colors,
   products: [
     { ...DEFAULT_FLYER_PRODUCT, name: 'Yerba mate', description: 'Paquete 1 kg', price: '3.990', oldPrice: '5.700', discount: '30%' },
     { ...DEFAULT_FLYER_PRODUCT, name: 'Galletitas', description: 'Variedades 400 g', price: '1.890', oldPrice: '2.700', discount: '30%' },

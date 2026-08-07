@@ -9,7 +9,7 @@ La barra superior permite cambiar entre dos herramientas independientes:
 - **Carteles de precio:** crea una hoja por oferta, permite mover sus objetos y exportar productos guardados en lote.
 - **Folletos:** compone piezas A4/A5 verticales u horizontales con múltiples productos, imágenes, descuentos, precios anteriores, logo, imagen de cabecera y texto legal.
 
-El generador de folletos incluye seis estilos visuales, paleta totalmente editable, grillas de 2 a 4 columnas, controles de separación y bordes, productos duplicables y vista previa permanente. La exportación genera un PDF con las mismas dimensiones y composición visibles en pantalla.
+La interfaz utiliza la identidad visual negro/verde de **El Rincón de los Nietos**, inspirada en la cartelería de los locales. El generador de folletos incluye nueve estilos visuales —tres de ellos exclusivos de la marca—, paleta totalmente editable, grillas de 2 a 4 columnas, controles de separación y bordes, productos duplicables y vista previa permanente. La exportación genera un PDF con las mismas dimensiones y composición visibles en pantalla.
 
 ## Ejecutar
 

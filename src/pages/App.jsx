@@ -76,7 +76,7 @@ export default function App() {
   }, [handleExport, handleFlyerExport, handlePrint, section]);
 
   return (
-    <div className={`app-shell ${section === 'flyers' ? 'flyer-mode' : 'poster-mode'} min-h-screen bg-[#f5f5f5] text-gray-900`}>
+    <div className={`app-shell brand-shell ${section === 'flyers' ? 'flyer-mode' : 'poster-mode'} min-h-screen text-gray-900`}>
       <AppNavigation section={section} onChange={handleSectionChange} />
       <main className="px-4 py-6 sm:px-6 lg:px-10">
         {section === 'posters' ? <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[460px_1fr] lg:items-start">
@@ -87,7 +87,7 @@ export default function App() {
           <div className="xl:sticky xl:top-24"><FlyerPreview flyer={flyer} flyerRef={flyerRef} /></div>
         </div>}
 
-        <footer className="no-print mx-auto mt-8 max-w-7xl rounded-3xl bg-white px-6 py-4 text-center text-sm font-extrabold tracking-wide text-gray-600 shadow-sm">Web Desarrollada por Tomas Victola</footer>
+        <footer className="brand-footer no-print mx-auto mt-8 flex max-w-7xl items-center justify-center gap-2 rounded-3xl border border-emerald-400/20 bg-[#07130d] px-6 py-4 text-center text-sm font-extrabold tracking-wide text-emerald-100 shadow-xl"><span className="h-2 w-2 rounded-full bg-lime-400 shadow-[0_0_12px_#a3e635]" /> Web Desarrollada por Tomas Victola</footer>
 
         <div className="export-batch pointer-events-none fixed -left-[9999px] top-0" aria-hidden="true">
           <div ref={batchRef}>{expandedPosters.map((item, index) => <PrintablePoster key={`${item.id ?? 'actual'}-${index}`} poster={item} />)}</div>

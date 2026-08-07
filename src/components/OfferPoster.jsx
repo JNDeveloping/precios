@@ -9,6 +9,7 @@ const shapeClasses = {
 };
 
 function TemplateDecorations({ template, colors }) {
+  if (template === 'rincon') return <><div className="flyer-checkers absolute inset-y-0 left-0 w-[6%]" style={{ '--checker-color': colors.stampStartColor }} /><div className="flyer-checkers absolute inset-y-0 right-0 w-[6%]" style={{ '--checker-color': colors.stampStartColor }} /><div className="absolute inset-x-[6%] bottom-[3%] h-[1.2%] rounded-full" style={{ backgroundColor: colors.stampStartColor }} /></>;
   if (template === 'clearance') return <><div className="absolute -right-[18%] top-[7%] h-[20%] w-[80%] -rotate-6 bg-gray-950" /><div className="absolute -bottom-[8%] -left-[15%] h-[22%] w-[90%] rotate-6 bg-red-200" /></>;
   if (template === 'twoForOne') return <><div className="absolute -right-[20%] -top-[4%] h-[34%] w-[90%] -rotate-12 bg-yellow-300 opacity-70" /><div className="absolute bottom-0 left-0 h-[15%] w-full bg-orange-100" /></>;
   if (template === 'combo') return <><div className="absolute -left-[25%] top-[20%] h-[22%] w-[85%] rotate-12 bg-emerald-100" /><div className="absolute -right-[20%] bottom-[5%] h-[25%] w-[85%] -rotate-12 bg-green-200" /></>;
