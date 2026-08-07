@@ -11,6 +11,8 @@ La barra superior permite cambiar entre dos herramientas independientes:
 
 La interfaz utiliza la identidad visual negro/verde de **El Rincón de los Nietos**, inspirada en la cartelería de los locales. El generador de folletos incluye nueve estilos visuales —tres de ellos exclusivos de la marca—, paleta totalmente editable, grillas de 2 a 4 columnas, controles de separación y bordes, productos duplicables y vista previa permanente. La exportación genera un PDF con las mismas dimensiones y composición visibles en pantalla.
 
+Al agregar productos, el modo de **acomodado automático** selecciona la cantidad de columnas y filas adecuada, compacta progresivamente las imágenes y tipografías, reduce los espacios y centra la última fila incompleta. También puede desactivarse para elegir las columnas manualmente.
+
 ## Ejecutar
 
 ```bash

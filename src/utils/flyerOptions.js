@@ -44,7 +44,7 @@ export const DEFAULT_FLYER_PRODUCT = {
 export const DEFAULT_FLYER = {
   template: 'rincon', size: 'A4', orientation: 'portrait',
   businessName: 'El Rincon De Los Nietos', title: '¡SÚPER OFERTAS!', subtitle: 'Precios increíbles por tiempo limitado', validity: 'Válido hasta agotar stock', footer: 'Las imágenes son ilustrativas. Consultá disponibilidad.',
-  columns: 2, cardRadius: 22, cardGap: 12, showDiscount: true, showOldPrice: true, showDescription: true,
+  columns: 2, automaticLayout: true, cardRadius: 22, cardGap: 12, showDiscount: true, showOldPrice: true, showDescription: true,
   logo: '', bannerImage: '', bannerOpacity: 28,
   ...FLYER_TEMPLATES.rincon.colors,
   products: [
@@ -54,6 +54,23 @@ export const DEFAULT_FLYER = {
     { ...DEFAULT_FLYER_PRODUCT, name: 'Café instantáneo', description: 'Frasco 170 g', price: '4.290', oldPrice: '6.130', discount: '30%' },
   ],
 };
+
+// El modo automático aumenta columnas y compacta las tarjetas para que todos los
+// productos mantengan una jerarquía visual equilibrada dentro de una sola hoja.
+export function getFlyerLayout(productCount, orientation, preferredColumns, automaticLayout = true) {
+  const count = Math.max(1, productCount);
+  let columns = Math.max(2, Math.min(4, Number(preferredColumns) || 2));
+
+  if (automaticLayout) {
+    if (orientation === 'landscape') columns = count <= 3 ? count : count <= 8 ? 4 : 5;
+    else columns = count <= 4 ? 2 : count <= 9 ? 3 : 4;
+  }
+
+  columns = Math.max(1, Math.min(columns, count));
+  const rows = Math.ceil(count / columns);
+  const density = rows >= 4 || count > 12 ? 'dense' : rows >= 3 || count > 6 ? 'compact' : 'comfortable';
+  return { columns, rows, density };
+}
 
 export const FLYER_SIZES = {
   A4: { width: 210, height: 297 },

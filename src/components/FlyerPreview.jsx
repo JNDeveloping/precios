@@ -1,18 +1,25 @@
-import { FLYER_SIZES, FLYER_TEMPLATES } from '../utils/flyerOptions.js';
+import { FLYER_SIZES, FLYER_TEMPLATES, getFlyerLayout } from '../utils/flyerOptions.js';
 
-function ProductCard({ product, flyer }) {
+const DENSITY = {
+  comfortable: { padding: '3.2cqw', badge: '11cqw', badgeText: '3.3cqw', image: '24cqw', name: '4cqw', description: '2.5cqw', oldPrice: '2.6cqw', price: '8cqw' },
+  compact: { padding: '2.1cqw', badge: '8cqw', badgeText: '2.35cqw', image: '16cqw', name: '2.9cqw', description: '1.9cqw', oldPrice: '1.9cqw', price: '5.6cqw' },
+  dense: { padding: '1.5cqw', badge: '6.6cqw', badgeText: '1.9cqw', image: '11cqw', name: '2.25cqw', description: '1.5cqw', oldPrice: '1.5cqw', price: '4.35cqw' },
+};
+
+function ProductCard({ product, flyer, layout, placement }) {
+  const scale = DENSITY[layout.density];
   return (
-    <article className={`relative flex min-h-0 flex-col overflow-hidden border-[3px] p-[3.2cqw] shadow-[0_1.2cqw_2.8cqw_rgba(15,23,42,.12)] ${product.featured ? 'ring-[1.2cqw]' : ''}`} style={{ background: flyer.card, borderColor: flyer.border, borderRadius: `${flyer.cardRadius}px`, '--tw-ring-color': flyer.accent }}>
-      {flyer.showDiscount && product.discount && <div className="absolute left-[2.5cqw] top-[2.5cqw] z-10 flex aspect-square w-[11cqw] -rotate-6 items-center justify-center rounded-full text-center font-black leading-none shadow-lg" style={{ background: flyer.accent, color: flyer.header, fontSize: '3.3cqw' }}>-{product.discount.replace('-', '')}</div>}
+    <article className={`relative flex min-h-0 flex-col overflow-hidden border-[3px] shadow-[0_1.2cqw_2.8cqw_rgba(15,23,42,.12)] ${product.featured ? 'ring-[.8cqw]' : ''}`} style={{ background: flyer.card, borderColor: flyer.border, borderRadius: `${Math.max(8, Number(flyer.cardRadius) - (layout.density === 'dense' ? 8 : 0))}px`, '--tw-ring-color': flyer.accent, padding: scale.padding, ...placement }}>
+      {flyer.showDiscount && product.discount && <div className="absolute left-[1.5cqw] top-[1.5cqw] z-10 flex aspect-square -rotate-6 items-center justify-center rounded-full text-center font-black leading-none shadow-lg" style={{ background: flyer.accent, color: flyer.header, fontSize: scale.badgeText, width: scale.badge }}>-{product.discount.replace('-', '')}</div>}
       <div className="flex min-h-0 flex-1 items-center justify-center py-[1cqw]">
-        {product.image ? <img src={product.image} alt="" className="h-full max-h-[24cqw] w-full object-contain drop-shadow-lg" /> : <div className="flex aspect-square w-[20cqw] items-center justify-center rounded-[4cqw] border-2 border-dashed text-center font-bold opacity-30" style={{ borderColor: flyer.text, color: flyer.text, fontSize: '2.5cqw' }}>IMAGEN<br />DEL PRODUCTO</div>}
+        {product.image ? <img src={product.image} alt="" className="h-full w-full object-contain drop-shadow-lg" style={{ maxHeight: scale.image }} /> : <div className="flex aspect-square items-center justify-center rounded-[3cqw] border-2 border-dashed text-center font-bold opacity-30" style={{ borderColor: flyer.text, color: flyer.text, fontSize: scale.description, width: scale.image }}>IMAGEN<br />DEL PRODUCTO</div>}
       </div>
       <div className="shrink-0 text-center">
-        <h3 className="line-clamp-2 font-black uppercase leading-[.95]" style={{ color: flyer.text, fontSize: '4cqw' }}>{product.name || 'Producto'}</h3>
-        {flyer.showDescription && <p className="mt-[1cqw] truncate font-bold opacity-65" style={{ color: flyer.text, fontSize: '2.5cqw' }}>{product.description}</p>}
-        <div className="mt-[1.2cqw] flex items-end justify-center gap-[1.5cqw]">
-          {flyer.showOldPrice && product.oldPrice && <span className="pb-[1cqw] font-black line-through opacity-45" style={{ color: flyer.text, fontSize: '2.6cqw' }}>${product.oldPrice}</span>}
-          <span className="font-black leading-none tracking-tighter" style={{ color: flyer.price, fontSize: product.price?.length > 7 ? '6.5cqw' : '8cqw' }}><small className="align-top" style={{ fontSize: '.45em' }}>$</small>{product.price || '0'}</span>
+        <h3 className="line-clamp-2 font-black uppercase leading-[.95]" style={{ color: flyer.text, fontSize: scale.name }}>{product.name || 'Producto'}</h3>
+        {flyer.showDescription && <p className="mt-[.6cqw] truncate font-bold opacity-65" style={{ color: flyer.text, fontSize: scale.description }}>{product.description}</p>}
+        <div className="mt-[.7cqw] flex items-end justify-center gap-[1cqw]">
+          {flyer.showOldPrice && product.oldPrice && <span className="pb-[.5cqw] font-black line-through opacity-45" style={{ color: flyer.text, fontSize: scale.oldPrice }}>${product.oldPrice}</span>}
+          <span className="font-black leading-none tracking-tighter" style={{ color: flyer.price, fontSize: product.price?.length > 7 ? `calc(${scale.price} * .82)` : scale.price }}><small className="align-top" style={{ fontSize: '.45em' }}>$</small>{product.price || '0'}</span>
         </div>
       </div>
     </article>
@@ -24,6 +31,10 @@ export function PrintableFlyer({ flyer, flyerRef }) {
   const landscape = flyer.orientation === 'landscape';
   const ratio = landscape ? `${size.height}/${size.width}` : `${size.width}/${size.height}`;
   const pattern = FLYER_TEMPLATES[flyer.template]?.pattern;
+  const layout = getFlyerLayout(flyer.products.length, flyer.orientation, flyer.columns, flyer.automaticLayout);
+  const lastRowCount = flyer.products.length % layout.columns || layout.columns;
+  const firstLastRow = flyer.products.length - lastRowCount;
+  const centeredStart = Math.floor((layout.columns - lastRowCount) / 2) + 1;
   return (
     <article ref={flyerRef} id={flyerRef ? 'flyer-print' : undefined} className="flyer-page relative mx-auto flex w-full max-w-[794px] flex-col overflow-hidden" style={{ aspectRatio: ratio, containerType: 'inline-size', background: flyer.background, '--flyer-width': `${landscape ? size.height : size.width}mm`, '--flyer-height': `${landscape ? size.width : size.height}mm` }}>
       <header className="relative shrink-0 overflow-hidden px-[7cqw] py-[3.3cqw] text-center" style={{ background: flyer.header, color: flyer.headerText }}>
@@ -36,8 +47,8 @@ export function PrintableFlyer({ flyer, flyerRef }) {
         </div>
       </header>
       <div className="flex shrink-0 items-center justify-center px-[4cqw] py-[1.5cqw] font-black uppercase tracking-wide" style={{ background: flyer.accent, color: flyer.header, fontSize: '2.4cqw' }}>{flyer.validity}</div>
-      <section className="grid min-h-0 flex-1 p-[3cqw]" style={{ gridTemplateColumns: `repeat(${flyer.columns}, minmax(0, 1fr))`, gap: `${flyer.cardGap}px` }}>
-        {flyer.products.map((product, index) => <ProductCard key={product.id || index} product={product} flyer={flyer} />)}
+      <section className="grid min-h-0 flex-1 p-[3cqw]" style={{ gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`, gap: `${Math.max(4, Number(flyer.cardGap) - (layout.density === 'dense' ? 5 : layout.density === 'compact' ? 2 : 0))}px` }}>
+        {flyer.products.map((product, index) => <ProductCard key={product.id || index} product={product} flyer={flyer} layout={layout} placement={index === firstLastRow && lastRowCount < layout.columns ? { gridColumnStart: centeredStart } : undefined} />)}
       </section>
       <footer className="shrink-0 px-[4cqw] py-[1.5cqw] text-center font-bold" style={{ background: flyer.header, color: flyer.headerText, fontSize: '1.8cqw' }}>{flyer.footer}</footer>
     </article>
