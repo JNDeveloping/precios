@@ -2,6 +2,15 @@
 
 Aplicación web local, moderna y responsive para crear carteles de supermercado listos para PDF o impresión en A4/A5.
 
+## Dos estudios en una sola aplicación
+
+La barra superior permite cambiar entre dos herramientas independientes:
+
+- **Carteles de precio:** crea una hoja por oferta, permite mover sus objetos y exportar productos guardados en lote.
+- **Folletos:** compone piezas A4/A5 verticales u horizontales con múltiples productos, imágenes, descuentos, precios anteriores, logo, imagen de cabecera y texto legal.
+
+El generador de folletos incluye seis estilos visuales, paleta totalmente editable, grillas de 2 a 4 columnas, controles de separación y bordes, productos duplicables y vista previa permanente. La exportación genera un PDF con las mismas dimensiones y composición visibles en pantalla.
+
 ## Ejecutar
 
 ```bash
