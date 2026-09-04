@@ -24,6 +24,19 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
     onChange({ ...poster, template: key, positions: DEFAULT_POSITIONS, additionalProducts, promotionType: template.promotion?.type || 'standard', promotionQuantity: template.promotion?.quantity || poster.promotionQuantity, promotionPayQuantity: template.promotion?.payQuantity || poster.promotionPayQuantity, ...(template.price && { price: template.price }), ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
     if (needsProducts) window.requestAnimationFrame(() => document.getElementById('additional-products')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   };
+  const updatePromotionQuantity = (field) => (event) => {
+    const value = event.target.value;
+    const next = { ...poster, [field]: value };
+    if (poster.promotionType === 'payLess') {
+      const quantity = field === 'promotionQuantity' ? value : poster.promotionQuantity;
+      const payQuantity = field === 'promotionPayQuantity' ? value : poster.promotionPayQuantity;
+      next.offerLabel = `${quantity}×${payQuantity}`;
+      next.tagline = `LLEVÁS ${quantity} · PAGÁS ${payQuantity}`;
+    } else if (poster.promotionType === 'bundle') {
+      next.offerLabel = `${value} POR`;
+    }
+    onChange(next);
+  };
   const updateAdditionalProduct = (index, value) => onChange({ ...poster, additionalProducts: poster.additionalProducts.map((item, itemIndex) => itemIndex === index ? value : item) });
   const addComboProduct = () => onChange({ ...poster, additionalProducts: [...(poster.additionalProducts || []), ''] });
   const removeAdditionalProduct = (index) => onChange({ ...poster, additionalProducts: poster.additionalProducts.filter((_, itemIndex) => itemIndex !== index) });
@@ -71,8 +84,6 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         </div>
       </div>
 
-      <div className="mb-7 rounded-3xl border border-lime-300 bg-[#07130d] p-4 text-white"><p className="text-xs font-black uppercase tracking-[.18em] text-lime-400">Plantillas de promociones</p><p className="mt-1 text-xs text-emerald-100/70">Ahora están en Carteles de precio. Elegí una y personalizá todos sus valores.</p><div className="mt-3 grid grid-cols-2 gap-2">{[['threeForTwo', '3 × 2'], ['fourForThree', '4 × 3'], ['threeForPrice', '3 × $1.000'], ['twoForPrice', '2 × $1.000']].map(([key, label]) => <button type="button" key={key} onClick={() => updateTemplate(key)} className={`rounded-xl border px-3 py-2 text-sm font-black transition ${poster.template === key ? 'border-lime-300 bg-lime-400 text-[#07130d]' : 'border-white/15 bg-white/[.07] hover:border-lime-300/60'}`}>{label}</button>)}</div></div>
-
       <div className="space-y-5">
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del negocio</span><input className={inputClass} value={poster.businessName || ''} onChange={update('businessName')} placeholder="El Rincon De Los Nietos" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel principal</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
@@ -89,7 +100,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
           <p className="mt-3 text-xs leading-5 text-gray-400">La eliminación funciona mejor con fondos lisos y se procesa localmente.</p>
         </div>
         <label className="block"><span className="text-sm font-bold text-gray-700">{poster.promotionType === 'bundle' ? 'Precio total del combo' : 'Precio'}</span><input className={`${inputClass} text-2xl font-black`} value={poster.price} onChange={update('price')} placeholder="Ej: 2.499" /></label>
-        {poster.promotionType !== 'standard' && <div className="rounded-3xl border border-lime-300 bg-[#07130d] p-4 text-white"><p className="text-xs font-black uppercase tracking-[.18em] text-lime-400">Configuración de la promoción</p><div className="mt-3 grid grid-cols-2 gap-3"><label className="text-sm font-bold">Cantidad que llevás<input className={inputClass} type="number" min="2" value={poster.promotionQuantity} onChange={update('promotionQuantity')} /></label>{poster.promotionType === 'payLess' && <label className="text-sm font-bold">Cantidad que pagás<input className={inputClass} type="number" min="1" value={poster.promotionPayQuantity} onChange={update('promotionPayQuantity')} /></label>}</div><p className="mt-3 text-xs text-emerald-100/70">Podés editar también el precio, el texto principal y el texto llamativo.</p></div>}
+        {poster.promotionType !== 'standard' && <div className="rounded-3xl border border-lime-300 bg-[#07130d] p-4 text-white"><p className="text-xs font-black uppercase tracking-[.18em] text-lime-400">Configuración de la promoción</p><div className="mt-3 grid grid-cols-2 gap-3"><label className="text-sm font-bold">Cantidad que llevás<input className={inputClass} type="number" min="2" value={poster.promotionQuantity} onChange={updatePromotionQuantity('promotionQuantity')} /></label>{poster.promotionType === 'payLess' && <label className="text-sm font-bold">Cantidad que pagás<input className={inputClass} type="number" min="1" value={poster.promotionPayQuantity} onChange={updatePromotionQuantity('promotionPayQuantity')} /></label>}</div><p className="mt-3 text-xs text-emerald-100/70">Podés editar también el precio, el texto principal y el texto llamativo.</p></div>}
 
         <div>
           <span className="text-sm font-bold text-gray-700">Tamaño</span>
@@ -153,8 +164,8 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
               {template.favorite && <Star size={14} className="absolute right-2 top-2 z-20 fill-yellow-400 text-yellow-500" />}
               <div className={`absolute h-2/5 w-full ${index % 2 ? 'top-0 -skew-y-6' : 'bottom-0 skew-y-6'}`} style={{ backgroundColor: template.colors.innerBorderColor }} />
               <div className="absolute left-0 top-[12%] h-4 w-4/5" style={{ backgroundColor: template.colors.offerBackground }} />
-              <div className="absolute left-1/2 top-[38%] h-10 w-20 -translate-x-1/2 rounded-full" style={{ background: `linear-gradient(135deg, ${template.colors.stampStartColor}, ${template.colors.stampEndColor})` }} />
-              <div className="absolute left-1/2 top-[64%] h-5 w-3/4 -translate-x-1/2 rounded" style={{ backgroundColor: template.colors.priceColor }} />
+              <div className="absolute left-1/2 top-[38%] flex h-10 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[9px] font-black" style={{ background: `linear-gradient(135deg, ${template.colors.stampStartColor}, ${template.colors.stampEndColor})`, color: template.colors.stampTextColor }}>{template.promotion ? template.tagline : ''}</div>
+              {template.promotion ? <div className="absolute left-1/2 top-[61%] w-[82%] -translate-x-1/2 text-center font-black leading-none" style={{ color: template.colors.priceColor }}><span className="block text-lg">{template.offerLabel}</span><span className="mt-1 block text-xs">${template.price || 'PRECIO'}</span></div> : <div className="absolute left-1/2 top-[64%] h-5 w-3/4 -translate-x-1/2 rounded" style={{ backgroundColor: template.colors.priceColor }} />}
               <div className="absolute bottom-[12%] left-1/2 h-2 w-2/3 -translate-x-1/2 rounded bg-gray-800" />
             </div><span className="mt-2 block truncate text-xs font-black">{template.label}</span><span className="block truncate text-[10px] text-gray-400">{template.description}</span>
           </button>)}

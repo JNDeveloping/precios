@@ -58,8 +58,6 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
   const size = SIZES[poster.size];
   const border = poster.borderCustomColor || BORDER_COLORS[poster.borderColor]?.hex || DEFAULT_POSTER.borderCustomColor;
   const movable = Boolean(printRef && onPositionChange);
-  const promotionLabel = poster.promotionType === 'payLess' ? `${poster.promotionQuantity || 3}×${poster.promotionPayQuantity || 2}` : poster.promotionType === 'bundle' ? `${poster.promotionQuantity || 3} POR` : poster.offerLabel;
-  const promotionTagline = poster.promotionType === 'payLess' ? `LLEVÁS ${poster.promotionQuantity || 3} · PAGÁS ${poster.promotionPayQuantity || 2}` : poster.tagline;
 
   return (
     <article id={printRef ? 'poster-print' : undefined} ref={printRef} className={`poster-page relative mx-auto w-full max-w-[794px] overflow-hidden ${printRef ? 'lg:h-[calc(100vh-8rem)] lg:w-auto lg:max-w-full' : ''} ${size.previewClass}`} style={{ containerType: 'inline-size', backgroundColor: colors.posterBackground, border: `5px solid ${border}`, '--poster-width': `${size.widthMm}mm`, '--poster-height': `${size.heightMm}mm` }}>
@@ -71,13 +69,13 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
       </DraggableElement>
 
       <DraggableElement id="offer" position={positions.offer} enabled={movable} onMove={onPositionChange} className="max-w-[92%]">
-        <div className="break-words font-black uppercase leading-none tracking-[0.16em]" style={{ backgroundColor: colors.offerBackground, color: colors.offerTextColor, boxShadow: `0 1.5cqw 0 ${colors.offerShadowColor}`, fontSize: getOfferFontSize(promotionLabel), padding: '1.5cqw 5cqw', whiteSpace: 'nowrap' }}>{promotionLabel || 'OFERTA'}</div>
+        <div className="break-words font-black uppercase leading-none tracking-[0.16em]" style={{ backgroundColor: colors.offerBackground, color: colors.offerTextColor, boxShadow: `0 1.5cqw 0 ${colors.offerShadowColor}`, fontSize: getOfferFontSize(poster.offerLabel), padding: '1.5cqw 5cqw', whiteSpace: 'nowrap' }}>{poster.offerLabel || 'OFERTA'}</div>
       </DraggableElement>
 
       <DraggableElement id="stamp" position={positions.stamp} enabled={movable} onMove={onPositionChange} className="max-w-[85%]">
         <div className="relative">
           <div className={`absolute -inset-3 opacity-70 blur-md ${shapeClasses[poster.stampShape]}`} style={{ backgroundColor: colors.stampBackdropColor }} />
-          <div className={`relative flex items-center break-words text-center ${shapeClasses[poster.stampShape]} font-black uppercase shadow-xl ring-8 ring-white`} style={{ background: `linear-gradient(135deg, ${colors.stampStartColor}, ${colors.stampEndColor})`, color: colors.stampTextColor, fontSize: '3.5cqw', minHeight: '16cqw', padding: '2.5cqw 4cqw' }}>{promotionTagline}</div>
+          <div className={`relative flex items-center break-words text-center ${shapeClasses[poster.stampShape]} font-black uppercase shadow-xl ring-8 ring-white`} style={{ background: `linear-gradient(135deg, ${colors.stampStartColor}, ${colors.stampEndColor})`, color: colors.stampTextColor, fontSize: '3.5cqw', minHeight: '16cqw', padding: '2.5cqw 4cqw' }}>{poster.tagline}</div>
         </div>
       </DraggableElement>
 
