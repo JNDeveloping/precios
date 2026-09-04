@@ -7,6 +7,12 @@ export const FLYER_TEMPLATES = {
     label: 'Llevá X por $', description: '2×precio, 3×precio y más', category: 'Promos', pattern: 'waves', promotionStyle: true, promotionDefaults: { promotionType: 'bundle', buyQuantity: 3, bundlePrice: '2.999' },
     colors: { background: '#eaffdf', header: '#062719', headerText: '#ffffff', accent: '#facc15', card: '#ffffff', price: '#062719', text: '#062719', border: '#84cc16' },
   },
+  threeForThousand: {
+    label: '3 × $1.000', description: 'Precio redondo y súper visible', category: 'Promos', pattern: 'rays', promotionStyle: true,
+    promotionDefaults: { promotionType: 'bundle', buyQuantity: 3, bundlePrice: '1.000', featured: true },
+    contentDefaults: { title: '¡3 POR $1.000!', subtitle: 'Elegí tus favoritos y aprovechá', validity: 'PROMOCIÓN POR TIEMPO LIMITADO' },
+    colors: { background: '#f7fee7', header: '#062719', headerText: '#ffffff', accent: '#facc15', card: '#ffffff', price: '#062719', text: '#062719', border: '#22c55e' },
+  },
   rincon: {
     label: 'Rincón identidad', description: 'Negro y verde institucional', category: 'Marca', pattern: 'checker',
     colors: { background: '#f3f8f2', header: '#062719', headerText: '#ffffff', accent: '#38f21a', card: '#ffffff', price: '#087a3e', text: '#082116', border: '#20c55a' },

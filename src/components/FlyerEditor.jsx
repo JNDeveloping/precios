@@ -16,7 +16,7 @@ export function FlyerEditor({ flyer, onChange, onExport, onPrint, onReset }) {
   const applyTemplate = (key) => {
     const template = FLYER_TEMPLATES[key];
     const products = template.promotionDefaults ? flyer.products.map((product) => ({ ...product, ...template.promotionDefaults })) : flyer.products;
-    onChange({ ...flyer, template: key, products, ...template.colors });
+    onChange({ ...flyer, template: key, products, ...template.contentDefaults, ...template.colors });
   };
   const updateProduct = (index, field, value) => onChange({ ...flyer, products: flyer.products.map((product, itemIndex) => itemIndex === index ? { ...product, [field]: value } : product) });
   const addProduct = () => onChange({ ...flyer, products: [...flyer.products, { ...DEFAULT_FLYER_PRODUCT, id: createId() }] });

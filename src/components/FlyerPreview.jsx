@@ -49,6 +49,7 @@ export function PrintableFlyer({ flyer, flyerRef }) {
     <article ref={flyerRef} id={flyerRef ? 'flyer-print' : undefined} className="flyer-page relative mx-auto flex w-full max-w-[794px] flex-col overflow-hidden" style={{ aspectRatio: ratio, containerType: 'inline-size', background: flyer.background, '--flyer-width': `${landscape ? size.height : size.width}mm`, '--flyer-height': `${landscape ? size.width : size.height}mm` }}>
       <header className="relative shrink-0 overflow-hidden px-[7cqw] py-[3.3cqw] text-center" style={{ background: flyer.header, color: flyer.headerText }}>
         {flyer.bannerImage && <img src={flyer.bannerImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ opacity: Number(flyer.bannerOpacity) / 100 }} />}
+        {pattern === 'rays' && <div className="flyer-rays absolute inset-0 opacity-20" style={{ '--ray-color': flyer.accent }} />}
         {pattern === 'checker' && <><div className="flyer-checkers absolute inset-y-0 left-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /><div className="flyer-checkers absolute inset-y-0 right-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /></>}
         {pattern === 'waves' && <div className="absolute inset-x-0 bottom-0 h-[1.4cqw] opacity-80" style={{ background: `repeating-radial-gradient(circle at 1cqw 0, transparent 0 .65cqw, ${flyer.accent} .7cqw 1cqw)` }} />}
         <div className="relative flex items-center justify-center gap-[3cqw]">

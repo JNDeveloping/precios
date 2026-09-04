@@ -15,6 +15,8 @@ Al agregar productos, el modo de **acomodado automático** selecciona la cantida
 
 Las plantillas **Combos 3×2 / 4×3** y **Llevá X por $** permiten configurar una promoción diferente para cada producto: descuento porcentual, cantidad que se lleva y paga, cantidad a precio cerrado o un mensaje promocional libre. Todos los números, textos y colores continúan siendo editables.
 
+La plantilla **3 × $1.000** aplica en un clic una promoción de precio redondo con alto contraste, productos destacados y una cabecera específica. Tanto la cantidad como el precio, título, textos y paleta pueden modificarse después.
+
 ## Ejecutar
 
 ```bash
