@@ -1,4 +1,12 @@
 export const FLYER_TEMPLATES = {
+  multiBuy: {
+    label: 'Combos 3×2 / 4×3', description: 'Promociones por cantidad', category: 'Promos', pattern: 'checker', promotionStyle: true, promotionDefaults: { promotionType: 'payLess', buyQuantity: 3, payQuantity: 2 },
+    colors: { background: '#07130d', header: '#020806', headerText: '#ffffff', accent: '#83f52c', card: '#f7fff2', price: '#087a3e', text: '#062719', border: '#38f21a' },
+  },
+  bundlePrice: {
+    label: 'Llevá X por $', description: '2×precio, 3×precio y más', category: 'Promos', pattern: 'waves', promotionStyle: true, promotionDefaults: { promotionType: 'bundle', buyQuantity: 3, bundlePrice: '2.999' },
+    colors: { background: '#eaffdf', header: '#062719', headerText: '#ffffff', accent: '#facc15', card: '#ffffff', price: '#062719', text: '#062719', border: '#84cc16' },
+  },
   rincon: {
     label: 'Rincón identidad', description: 'Negro y verde institucional', category: 'Marca', pattern: 'checker',
     colors: { background: '#f3f8f2', header: '#062719', headerText: '#ffffff', accent: '#38f21a', card: '#ffffff', price: '#087a3e', text: '#082116', border: '#20c55a' },
@@ -39,6 +47,7 @@ export const FLYER_TEMPLATES = {
 
 export const DEFAULT_FLYER_PRODUCT = {
   name: 'Producto destacado', description: 'Presentación 500 g', price: '1.999', oldPrice: '', discount: '30%', image: '', featured: false,
+  promotionType: 'discount', buyQuantity: 3, payQuantity: 2, bundlePrice: '2.999', promotionText: '',
 };
 
 export const DEFAULT_FLYER = {

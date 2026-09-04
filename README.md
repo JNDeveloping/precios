@@ -13,6 +13,8 @@ La interfaz utiliza la identidad visual negro/verde de **El Rincón de los Nieto
 
 Al agregar productos, el modo de **acomodado automático** selecciona la cantidad de columnas y filas adecuada, compacta progresivamente las imágenes y tipografías, reduce los espacios y centra la última fila incompleta. También puede desactivarse para elegir las columnas manualmente.
 
+Las plantillas **Combos 3×2 / 4×3** y **Llevá X por $** permiten configurar una promoción diferente para cada producto: descuento porcentual, cantidad que se lleva y paga, cantidad a precio cerrado o un mensaje promocional libre. Todos los números, textos y colores continúan siendo editables.
+
 ## Ejecutar
 
 ```bash
