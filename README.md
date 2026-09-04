@@ -13,11 +13,7 @@ La interfaz utiliza la identidad visual negro/verde de **El Rincón de los Nieto
 
 Al agregar productos, el modo de **acomodado automático** selecciona la cantidad de columnas y filas adecuada, compacta progresivamente las imágenes y tipografías, reduce los espacios y centra la última fila incompleta. También puede desactivarse para elegir las columnas manualmente.
 
-Las plantillas **Combos 3×2 / 4×3** y **Llevá X por $** permiten configurar una promoción diferente para cada producto: descuento porcentual, cantidad que se lleva y paga, cantidad a precio cerrado o un mensaje promocional libre. Todos los números, textos y colores continúan siendo editables.
-
-La plantilla **3 × $1.000** aplica en un clic una promoción de precio redondo con alto contraste, productos destacados y una cabecera específica. Tanto la cantidad como el precio, título, textos y paleta pueden modificarse después.
-
-Para que estas plantillas no queden ocultas entre los demás diseños, el editor muestra al principio un bloque negro y verde de **Plantillas de promociones** con accesos directos a `3 × $1.000`, `2 × $1.000` y `3 × $2.000`.
+Las promociones `3×2`, `4×3`, `3 × $1.000` y `2 × $1.000` pertenecen al estudio **Carteles de precio**. Allí aparecen en un bloque destacado y permiten editar las cantidades, cuánto se paga, el precio final, los textos, colores, producto e imagen. El estudio de folletos queda reservado para composiciones con varios productos.
 
 ## Ejecutar
 

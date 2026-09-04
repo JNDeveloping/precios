@@ -28,9 +28,6 @@ button, input, select { font: inherit; }
   background-position: 0 0, 1.5cqw 1.5cqw;
   background-size: 3cqw 3cqw;
 }
-.flyer-rays {
-  background: repeating-conic-gradient(from -15deg at 50% 115%, var(--ray-color) 0deg 10deg, transparent 10deg 22deg);
-}
 .flyer-page { box-shadow: 0 30px 80px rgba(0, 0, 0, .28); }
 .flyer-preview-card .flyer-page { width: auto; height: 100%; max-width: 100%; max-height: 100%; }
 .poster-page + .poster-page { break-before: page; page-break-before: always; }

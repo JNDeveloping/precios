@@ -6,20 +6,11 @@ const DENSITY = {
   dense: { padding: '1.5cqw', badge: '6.6cqw', badgeText: '1.9cqw', image: '11cqw', name: '2.25cqw', description: '1.5cqw', oldPrice: '1.5cqw', price: '4.35cqw' },
 };
 
-function getPromotion(product) {
-  if (product.promotionType === 'payLess') return { primary: `${product.buyQuantity || 3}×${product.payQuantity || 2}`, secondary: 'LLEVÁS · PAGÁS', bundle: false };
-  if (product.promotionType === 'bundle') return { primary: `${product.buyQuantity || 2}×`, secondary: `$${product.bundlePrice || product.price || '0'}`, bundle: true };
-  if (product.promotionType === 'custom') return { primary: product.promotionText || 'PROMO', secondary: '', bundle: false };
-  if (product.discount) return { primary: `-${product.discount.replace('-', '')}`, secondary: '', bundle: false };
-  return null;
-}
-
 function ProductCard({ product, flyer, layout, placement }) {
   const scale = DENSITY[layout.density];
-  const promotion = getPromotion(product);
   return (
     <article className={`relative flex min-h-0 flex-col overflow-hidden border-[3px] shadow-[0_1.2cqw_2.8cqw_rgba(15,23,42,.12)] ${product.featured ? 'ring-[.8cqw]' : ''}`} style={{ background: flyer.card, borderColor: flyer.border, borderRadius: `${Math.max(8, Number(flyer.cardRadius) - (layout.density === 'dense' ? 8 : 0))}px`, '--tw-ring-color': flyer.accent, padding: scale.padding, ...placement }}>
-      {flyer.showDiscount && promotion && <div className={`absolute left-[1.2cqw] top-[1.2cqw] z-10 flex -rotate-6 flex-col items-center justify-center rounded-[35%_65%_45%_55%/55%_40%_60%_45%] text-center font-black leading-none shadow-lg ${promotion.bundle ? 'aspect-auto px-[1.5cqw] py-[1cqw]' : 'aspect-square'}`} style={{ background: flyer.accent, color: flyer.header, fontSize: scale.badgeText, minWidth: scale.badge, maxWidth: '55%' }}><span>{promotion.primary}</span>{promotion.secondary && <small className="mt-[.45cqw] whitespace-nowrap font-black" style={{ fontSize: '.48em' }}>{promotion.secondary}</small>}</div>}
+      {flyer.showDiscount && product.discount && <div className="absolute left-[1.5cqw] top-[1.5cqw] z-10 flex aspect-square -rotate-6 items-center justify-center rounded-full text-center font-black leading-none shadow-lg" style={{ background: flyer.accent, color: flyer.header, fontSize: scale.badgeText, width: scale.badge }}>-{product.discount.replace('-', '')}</div>}
       <div className="flex min-h-0 flex-1 items-center justify-center py-[1cqw]">
         {product.image ? <img src={product.image} alt="" className="h-full w-full object-contain drop-shadow-lg" style={{ maxHeight: scale.image }} /> : <div className="flex aspect-square items-center justify-center rounded-[3cqw] border-2 border-dashed text-center font-bold opacity-30" style={{ borderColor: flyer.text, color: flyer.text, fontSize: scale.description, width: scale.image }}>IMAGEN<br />DEL PRODUCTO</div>}
       </div>
@@ -28,8 +19,7 @@ function ProductCard({ product, flyer, layout, placement }) {
         {flyer.showDescription && <p className="mt-[.6cqw] truncate font-bold opacity-65" style={{ color: flyer.text, fontSize: scale.description }}>{product.description}</p>}
         <div className="mt-[.7cqw] flex items-end justify-center gap-[1cqw]">
           {flyer.showOldPrice && product.oldPrice && <span className="pb-[.5cqw] font-black line-through opacity-45" style={{ color: flyer.text, fontSize: scale.oldPrice }}>${product.oldPrice}</span>}
-          {product.promotionType !== 'bundle' && <span className="font-black leading-none tracking-tighter" style={{ color: flyer.price, fontSize: product.price?.length > 7 ? `calc(${scale.price} * .82)` : scale.price }}><small className="align-top" style={{ fontSize: '.45em' }}>$</small>{product.price || '0'}</span>}
-          {product.promotionType === 'bundle' && <span className="font-black leading-none tracking-tighter" style={{ color: flyer.price, fontSize: scale.price }}><small style={{ fontSize: '.55em' }}>{product.buyQuantity || 2} POR </small><small className="align-top" style={{ fontSize: '.45em' }}>$</small>{product.bundlePrice || product.price || '0'}</span>}
+          <span className="font-black leading-none tracking-tighter" style={{ color: flyer.price, fontSize: product.price?.length > 7 ? `calc(${scale.price} * .82)` : scale.price }}><small className="align-top" style={{ fontSize: '.45em' }}>$</small>{product.price || '0'}</span>
         </div>
       </div>
     </article>
@@ -49,7 +39,6 @@ export function PrintableFlyer({ flyer, flyerRef }) {
     <article ref={flyerRef} id={flyerRef ? 'flyer-print' : undefined} className="flyer-page relative mx-auto flex w-full max-w-[794px] flex-col overflow-hidden" style={{ aspectRatio: ratio, containerType: 'inline-size', background: flyer.background, '--flyer-width': `${landscape ? size.height : size.width}mm`, '--flyer-height': `${landscape ? size.width : size.height}mm` }}>
       <header className="relative shrink-0 overflow-hidden px-[7cqw] py-[3.3cqw] text-center" style={{ background: flyer.header, color: flyer.headerText }}>
         {flyer.bannerImage && <img src={flyer.bannerImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ opacity: Number(flyer.bannerOpacity) / 100 }} />}
-        {pattern === 'rays' && <div className="flyer-rays absolute inset-0 opacity-20" style={{ '--ray-color': flyer.accent }} />}
         {pattern === 'checker' && <><div className="flyer-checkers absolute inset-y-0 left-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /><div className="flyer-checkers absolute inset-y-0 right-0 w-[5cqw]" style={{ '--checker-color': flyer.accent }} /></>}
         {pattern === 'waves' && <div className="absolute inset-x-0 bottom-0 h-[1.4cqw] opacity-80" style={{ background: `repeating-radial-gradient(circle at 1cqw 0, transparent 0 .65cqw, ${flyer.accent} .7cqw 1cqw)` }} />}
         <div className="relative flex items-center justify-center gap-[3cqw]">
