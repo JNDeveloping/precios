@@ -13,7 +13,7 @@ La interfaz utiliza la identidad visual negro/verde de **El Rincón de los Nieto
 
 Al agregar productos, el modo de **acomodado automático** selecciona la cantidad de columnas y filas adecuada, compacta progresivamente las imágenes y tipografías, reduce los espacios y centra la última fila incompleta. También puede desactivarse para elegir las columnas manualmente.
 
-Las promociones `3×2`, `4×3`, `3 × $1.000` y `2 × $1.000` pertenecen al estudio **Carteles de precio**. Aparecen abajo, dentro de la galería visual junto a las demás plantillas, con una miniatura real de su diseño. Permiten editar las cantidades, cuánto se paga, el precio final, los textos, colores, producto e imagen. El estudio de folletos queda reservado para composiciones con varios productos.
+El estudio **Carteles de precio** incluye solamente dos plantillas promocionales simples: **Promo configurable 2×1** y **Promo configurable 2×$1.000**. Aparecen abajo junto a los demás diseños, con una miniatura fiel. En la primera se editan libremente las cantidades que se llevan y pagan; en la segunda se editan la cantidad y el precio total. Ambas permiten cambiar textos, colores, producto, imagen y posiciones.
 
 ## Ejecutar
 

@@ -19,9 +19,9 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
   };
   const updateTemplate = (key) => {
     const template = TEMPLATES[key];
-    const needsProducts = key === 'twoForOne' || key === 'combo';
+    const needsProducts = key === 'combo';
     const additionalProducts = needsProducts && !poster.additionalProducts?.length ? [''] : (poster.additionalProducts || []);
-    onChange({ ...poster, template: key, positions: DEFAULT_POSITIONS, additionalProducts, promotionType: template.promotion?.type || 'standard', promotionQuantity: template.promotion?.quantity || poster.promotionQuantity, promotionPayQuantity: template.promotion?.payQuantity || poster.promotionPayQuantity, ...(template.price && { price: template.price }), ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
+    onChange({ ...poster, template: key, positions: template.positions || DEFAULT_POSITIONS, additionalProducts, promotionType: template.promotion?.type || 'standard', promotionQuantity: template.promotion?.quantity || poster.promotionQuantity, promotionPayQuantity: template.promotion?.payQuantity || poster.promotionPayQuantity, ...(template.price && { price: template.price }), ...(template.offerLabel && { offerLabel: template.offerLabel }), ...(template.tagline && { tagline: template.tagline }), ...(template.stampShape && { stampShape: template.stampShape }), ...template.colors });
     if (needsProducts) window.requestAnimationFrame(() => document.getElementById('additional-products')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   };
   const updatePromotionQuantity = (field) => (event) => {
@@ -33,7 +33,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
       next.offerLabel = `${quantity}×${payQuantity}`;
       next.tagline = `LLEVÁS ${quantity} · PAGÁS ${payQuantity}`;
     } else if (poster.promotionType === 'bundle') {
-      next.offerLabel = `${value} POR`;
+      next.offerLabel = `${value}×`;
     }
     onChange(next);
   };
@@ -88,11 +88,10 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del negocio</span><input className={inputClass} value={poster.businessName || ''} onChange={update('businessName')} placeholder="El Rincon De Los Nietos" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Texto del cartel principal</span><input className={inputClass} value={poster.offerLabel} onChange={update('offerLabel')} placeholder="OFERTA" /></label>
         <label className="block"><span className="text-sm font-bold text-gray-700">Nombre del producto</span><input className={inputClass} value={poster.productName} onChange={update('productName')} placeholder="Ej: Café molido 500 g" /></label>
-        {(poster.template === 'twoForOne' || poster.template === 'combo') && <div id="additional-products" className="rounded-3xl border-2 border-amber-200 bg-amber-50 p-4">
-          <div className="mb-3"><span className="font-black text-amber-950">{poster.template === 'twoForOne' ? 'Segundo producto del 2×1' : 'Productos del combo'}</span><p className="mt-1 text-xs text-amber-700">Estos productos aparecerán juntos en el cartel.</p></div>
-          <div className="space-y-2">{(poster.additionalProducts || []).map((item, index) => <div key={index} className="flex gap-2"><input className="min-w-0 flex-1 rounded-xl border border-amber-200 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-amber-300" value={item} onChange={(event) => updateAdditionalProduct(index, event.target.value)} placeholder={poster.template === 'twoForOne' ? 'Ej: Gaseosa 2,25 L' : `Producto ${index + 2}`} /><button type="button" onClick={() => removeAdditionalProduct(index)} className="rounded-xl p-2 text-emerald-600 hover:bg-emerald-100" aria-label="Quitar producto"><X size={17} /></button></div>)}</div>
+        {poster.template === 'combo' && <div id="additional-products" className="rounded-3xl border-2 border-amber-200 bg-amber-50 p-4">
+          <div className="mb-3"><span className="font-black text-amber-950">Productos del combo</span><p className="mt-1 text-xs text-amber-700">Estos productos aparecerán juntos en el cartel.</p></div>
+          <div className="space-y-2">{(poster.additionalProducts || []).map((item, index) => <div key={index} className="flex gap-2"><input className="min-w-0 flex-1 rounded-xl border border-amber-200 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-amber-300" value={item} onChange={(event) => updateAdditionalProduct(index, event.target.value)} placeholder={`Producto ${index + 2}`} /><button type="button" onClick={() => removeAdditionalProduct(index)} className="rounded-xl p-2 text-emerald-600 hover:bg-emerald-100" aria-label="Quitar producto"><X size={17} /></button></div>)}</div>
           {poster.template === 'combo' && <button type="button" onClick={addComboProduct} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-3 py-2 text-sm font-black text-amber-950 hover:bg-amber-300"><CirclePlus size={17} /> Agregar otro producto</button>}
-          {poster.template === 'twoForOne' && !(poster.additionalProducts || []).length && <button type="button" onClick={addComboProduct} className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-3 py-2 text-sm font-black text-amber-950"><CirclePlus size={17} /> Agregar segundo producto</button>}
         </div>}
         <div className="rounded-3xl border border-gray-200 p-4"><span className="text-sm font-bold text-gray-700">Imagen del producto <span className="font-normal text-gray-400">(opcional)</span></span><label className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-4 font-bold text-gray-600 transition hover:border-emerald-300 hover:bg-emerald-50"><ImagePlus size={19} /> {processingImage ? 'Procesando…' : poster.productImage ? 'Cambiar imagen' : 'Agregar imagen'}<input className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={updateImage} disabled={processingImage} /></label>
           <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl bg-gray-50 p-3 text-sm font-bold text-gray-700"><input type="checkbox" className="h-5 w-5 accent-emerald-600" checked={Boolean(poster.removeImageBackground)} onChange={toggleBackgroundRemoval} disabled={!poster.productImage || processingImage} /> Quitar fondo automáticamente</label>
@@ -165,7 +164,7 @@ export function ControlPanel({ poster, savedPosters, onChange, onClear, onExport
               <div className={`absolute h-2/5 w-full ${index % 2 ? 'top-0 -skew-y-6' : 'bottom-0 skew-y-6'}`} style={{ backgroundColor: template.colors.innerBorderColor }} />
               <div className="absolute left-0 top-[12%] h-4 w-4/5" style={{ backgroundColor: template.colors.offerBackground }} />
               <div className="absolute left-1/2 top-[38%] flex h-10 w-20 -translate-x-1/2 items-center justify-center rounded-full text-[9px] font-black" style={{ background: `linear-gradient(135deg, ${template.colors.stampStartColor}, ${template.colors.stampEndColor})`, color: template.colors.stampTextColor }}>{template.promotion ? template.tagline : ''}</div>
-              {template.promotion ? <div className="absolute left-1/2 top-[61%] w-[82%] -translate-x-1/2 text-center font-black leading-none" style={{ color: template.colors.priceColor }}><span className="block text-lg">{template.offerLabel}</span><span className="mt-1 block text-xs">${template.price || 'PRECIO'}</span></div> : <div className="absolute left-1/2 top-[64%] h-5 w-3/4 -translate-x-1/2 rounded" style={{ backgroundColor: template.colors.priceColor }} />}
+              {template.promotion ? <div className="absolute left-1/2 top-[61%] w-[82%] -translate-x-1/2 text-center font-black leading-none" style={{ color: template.colors.priceColor }}><span className="block text-lg">{template.offerLabel}</span>{template.promotion.type === 'bundle' && <span className="mt-1 block text-xs">${template.price}</span>}</div> : <div className="absolute left-1/2 top-[64%] h-5 w-3/4 -translate-x-1/2 rounded" style={{ backgroundColor: template.colors.priceColor }} />}
               <div className="absolute bottom-[12%] left-1/2 h-2 w-2/3 -translate-x-1/2 rounded bg-gray-800" />
             </div><span className="mt-2 block truncate text-xs font-black">{template.label}</span><span className="block truncate text-[10px] text-gray-400">{template.description}</span>
           </button>)}

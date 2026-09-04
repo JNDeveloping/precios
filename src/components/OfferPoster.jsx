@@ -11,7 +11,8 @@ const shapeClasses = {
 function TemplateDecorations({ template, colors }) {
   if (template === 'rincon') return <><div className="flyer-checkers absolute inset-y-0 left-0 w-[6%]" style={{ '--checker-color': colors.stampStartColor }} /><div className="flyer-checkers absolute inset-y-0 right-0 w-[6%]" style={{ '--checker-color': colors.stampStartColor }} /><div className="absolute inset-x-[6%] bottom-[3%] h-[1.2%] rounded-full" style={{ backgroundColor: colors.stampStartColor }} /></>;
   if (template === 'clearance') return <><div className="absolute -right-[18%] top-[7%] h-[20%] w-[80%] -rotate-6 bg-gray-950" /><div className="absolute -bottom-[8%] -left-[15%] h-[22%] w-[90%] rotate-6 bg-red-200" /></>;
-  if (template === 'twoForOne') return <><div className="absolute -right-[20%] -top-[4%] h-[34%] w-[90%] -rotate-12 bg-yellow-300 opacity-70" /><div className="absolute bottom-0 left-0 h-[15%] w-full bg-orange-100" /></>;
+  if (template === 'quantityPromo') return <><div className="absolute inset-x-0 top-[18%] h-[22%] -skew-y-3 bg-lime-200 opacity-60" /><div className="absolute inset-x-0 bottom-0 h-[11%] bg-emerald-200" /></>;
+  if (template === 'bundlePromo') return <><div className="absolute -right-[28%] top-[12%] h-[30%] w-[95%] -rotate-12 bg-emerald-600 opacity-35" /><div className="absolute inset-x-0 bottom-0 h-[12%] bg-lime-400 opacity-80" /></>;
   if (template === 'combo') return <><div className="absolute -left-[25%] top-[20%] h-[22%] w-[85%] rotate-12 bg-emerald-100" /><div className="absolute -right-[20%] bottom-[5%] h-[25%] w-[85%] -rotate-12 bg-green-200" /></>;
   if (template === 'wholesale') return <><div className="absolute inset-x-0 top-0 h-[18%] bg-blue-100" /><div className="absolute inset-x-0 bottom-0 h-[16%] bg-blue-200" /></>;
   if (template === 'neon') return <><div className="absolute -right-[15%] top-[4%] h-[28%] w-[65%] rotate-12 rounded-[30%] bg-yellow-300" /><div className="absolute -bottom-[10%] -left-[20%] h-[30%] w-[90%] -rotate-6 bg-pink-200" /></>;
@@ -90,7 +91,7 @@ export function PrintablePoster({ poster, printRef, onPositionChange }) {
       <DraggableElement id="product" position={positions.product} enabled={movable} onMove={onPositionChange} className="w-[86%] text-center">
         <h2 className="text-balance break-words font-black uppercase leading-[0.95] tracking-tight" style={{ color: colors.productTextColor, fontSize: getProductFontSize([poster.productName, ...(poster.additionalProducts || [])].join(' + ')) }}>
           <span>{poster.productName || 'Nombre del producto'}</span>
-          {(poster.additionalProducts || []).filter(Boolean).map((product, index) => <span key={`${product}-${index}`} className="mt-2 block"><span style={{ color: colors.priceColor }}>{poster.template === 'twoForOne' ? ' + ' : '• '}</span>{product}</span>)}
+          {(poster.additionalProducts || []).filter(Boolean).map((product, index) => <span key={`${product}-${index}`} className="mt-2 block"><span style={{ color: colors.priceColor }}>• </span>{product}</span>)}
         </h2>
       </DraggableElement>
     </article>
