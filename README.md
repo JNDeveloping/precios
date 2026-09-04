@@ -17,6 +17,8 @@ Las plantillas **Combos 3×2 / 4×3** y **Llevá X por $** permiten configurar u
 
 La plantilla **3 × $1.000** aplica en un clic una promoción de precio redondo con alto contraste, productos destacados y una cabecera específica. Tanto la cantidad como el precio, título, textos y paleta pueden modificarse después.
 
+Para que estas plantillas no queden ocultas entre los demás diseños, el editor muestra al principio un bloque negro y verde de **Plantillas de promociones** con accesos directos a `3 × $1.000`, `2 × $1.000` y `3 × $2.000`.
+
 ## Ejecutar
 
 ```bash

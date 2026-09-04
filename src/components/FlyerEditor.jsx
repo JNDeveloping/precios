@@ -1,4 +1,4 @@
-import { Copy, Download, ImagePlus, Plus, Printer, RotateCcw, Sparkles, Trash2 } from 'lucide-react';
+import { Copy, Download, ImagePlus, Plus, Printer, RotateCcw, Sparkles, Tags, Trash2 } from 'lucide-react';
 import { DEFAULT_FLYER_PRODUCT, FLYER_TEMPLATES, getFlyerLayout } from '../utils/flyerOptions.js';
 import { createId } from '../utils/id.js';
 
@@ -27,12 +27,23 @@ export function FlyerEditor({ flyer, onChange, onExport, onPrint, onReset }) {
   const applyPromotionPreset = (index, promotionType, buyQuantity, payQuantity = 1) => {
     onChange({ ...flyer, products: flyer.products.map((product, itemIndex) => itemIndex === index ? { ...product, promotionType, buyQuantity, payQuantity } : product) });
   };
+  const applyQuickPromotion = ({ quantity, price, title }) => {
+    const template = FLYER_TEMPLATES.threeForThousand;
+    const products = flyer.products.map((product) => ({ ...product, promotionType: 'bundle', buyQuantity: quantity, bundlePrice: price, featured: true }));
+    onChange({ ...flyer, template: 'threeForThousand', products, title, subtitle: 'Elegí tus favoritos y aprovechá', validity: 'PROMOCIÓN POR TIEMPO LIMITADO', ...template.colors });
+  };
+  const quickPromotions = [
+    { quantity: 3, price: '1.000', title: '¡3 POR $1.000!' },
+    { quantity: 2, price: '1.000', title: '¡2 POR $1.000!' },
+    { quantity: 3, price: '2.000', title: '¡3 POR $2.000!' },
+  ];
 
   return (
     <section className="no-print rounded-[2rem] bg-white p-5 shadow-[0_20px_70px_rgba(15,23,42,.08)] sm:p-7">
       <div className="mb-7 flex items-start gap-3"><div className="rounded-2xl bg-emerald-600 p-3 text-white"><Sparkles /></div><div><p className="text-xs font-black uppercase tracking-[.25em] text-emerald-600">Nuevo estudio</p><h1 className="text-3xl font-black text-slate-950">Generador de folletos</h1><p className="mt-2 text-sm leading-6 text-slate-500">Armá una pieza completa con productos, imágenes, descuentos y colores propios.</p></div></div>
 
       <div className="space-y-7">
+        <fieldset className="overflow-hidden rounded-3xl border border-lime-300 bg-[#07130d] p-4 text-white shadow-[0_14px_35px_rgba(6,39,25,.18)]"><legend className="flex items-center gap-2 rounded-full bg-lime-400 px-3 py-1 text-xs font-black uppercase tracking-wider text-[#07130d]"><Tags size={15} /> Plantillas de promociones</legend><p className="mt-2 text-xs text-emerald-100/70">Accesos rápidos siempre visibles. Después podés editar cantidad, precio, textos y colores.</p><div className="mt-3 grid grid-cols-3 gap-2">{quickPromotions.map((promotion) => <button type="button" key={promotion.title} onClick={() => applyQuickPromotion(promotion)} className={`rounded-2xl border px-2 py-3 text-center transition hover:-translate-y-0.5 ${flyer.template === 'threeForThousand' && flyer.title === promotion.title ? 'border-lime-300 bg-lime-400 text-[#07130d] ring-2 ring-lime-300/30' : 'border-white/15 bg-white/[.07] text-white hover:border-lime-300/60'}`}><strong className="block text-lg font-black leading-none">{promotion.quantity} × ${promotion.price}</strong><small className="mt-1 block text-[10px] font-bold opacity-70">Aplicar plantilla</small></button>)}</div></fieldset>
         <fieldset><legend className="text-sm font-black text-slate-900">1. Elegí un estilo</legend><div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">{Object.entries(FLYER_TEMPLATES).map(([key, template]) => <button key={key} type="button" onClick={() => applyTemplate(key)} className={`overflow-hidden rounded-2xl border-2 text-left transition ${flyer.template === key ? 'border-emerald-600 ring-4 ring-emerald-100' : 'border-slate-100 hover:border-slate-300'}`}><div className="h-16 p-2" style={{ background: template.colors.background }}><div className="h-5 rounded-md" style={{ background: template.colors.header }} /><div className="mt-2 grid grid-cols-2 gap-1"><i className="h-6 rounded bg-white" /><i className="h-6 rounded bg-white" /></div></div><div className="p-2"><p className="truncate text-xs font-black">{template.label}</p><p className="truncate text-[10px] text-slate-400">{template.description}</p></div></button>)}</div></fieldset>
 
         <fieldset className="rounded-3xl border border-slate-200 p-4"><legend className="px-2 text-sm font-black">2. Encabezado y formato</legend><div className="grid gap-4 sm:grid-cols-2"><label>Nombre del negocio<input className={inputClass} value={flyer.businessName} onChange={update('businessName')} /></label><label>Título principal<input className={inputClass} value={flyer.title} onChange={update('title')} /></label><label className="sm:col-span-2">Bajada promocional<input className={inputClass} value={flyer.subtitle} onChange={update('subtitle')} /></label><label>Vigencia<input className={inputClass} value={flyer.validity} onChange={update('validity')} /></label><label>Texto legal / pie<input className={inputClass} value={flyer.footer} onChange={update('footer')} /></label><label>Tamaño<select className={inputClass} value={flyer.size} onChange={update('size')}><option>A4</option><option>A5</option></select></label><label>Orientación<select className={inputClass} value={flyer.orientation} onChange={update('orientation')}><option value="portrait">Vertical</option><option value="landscape">Horizontal</option></select></label><label className={flyer.automaticLayout ? 'opacity-45' : ''}>Columnas<select disabled={flyer.automaticLayout} className={inputClass} value={flyer.columns} onChange={update('columns')}><option value="2">2 columnas</option><option value="3">3 columnas</option><option value="4">4 columnas</option></select></label><label>Separación de tarjetas<input className="mt-3 w-full accent-emerald-600" type="range" min="4" max="28" value={flyer.cardGap} onChange={update('cardGap')} /></label></div>
